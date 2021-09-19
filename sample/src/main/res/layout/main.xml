@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText"
+    >
+
+  <Button
+      android:id="@+id/show_dialog"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:text="Show Dialog"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      />
+
+  <Button
+      android:id="@+id/show_toast"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:text="Show Toast"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      />
+
+  <Spinner
+      android:id="@+id/spinner"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+
+  <EditText
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+</LinearLayout>
