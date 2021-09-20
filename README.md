@@ -94,7 +94,7 @@ We built this small library to fit the specific needs of the Square
 [Point of Sale](https://squareup.com/us/en/point-of-sale) application. We used
 [Timber](https://github.com/JakeWharton/timber) heavily before that, and love the simplicity of its
 API and the ability of its `DebugTree` to automatically figure out from which class it's being
-called and use that class name as its tag. Here are our motivations for replacing it with
+called from and use that class name as its tag. Here are our motivations for replacing it with
 `logcat()` in the Square Point of Sale:
 
 - Kotlin support for string interpolation is really nice. We love to use that for logs!
