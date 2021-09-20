@@ -1,7 +1,7 @@
 public final class logcat/AndroidLogcatLogger : logcat/LogcatLogger {
 	public fun <init> ()V
-	public fun <init> (I)V
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Llogcat/LogPriority;)V
+	public synthetic fun <init> (Llogcat/LogPriority;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun isLoggable (Llogcat/LogPriority;)Z
 	public fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
 }
