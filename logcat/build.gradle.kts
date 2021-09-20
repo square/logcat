@@ -31,17 +31,6 @@ android {
   }
 }
 
-tasks.withType<KotlinCompile> {
-  kotlinOptions {
-    freeCompilerArgs = listOfNotNull(
-      // allow-jvm-ir-dependencies is required to consume binaries built with the IR backend.
-      // It doesn't change the bytecode that gets generated for this module.
-      "-Xallow-jvm-ir-dependencies",
-      "-Xopt-in=kotlin.RequiresOptIn"
-    )
-  }
-}
-
 dependencies {
 
   compileOnly(Dependencies.Build.AndroidXAnnotation)

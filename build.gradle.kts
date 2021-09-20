@@ -39,8 +39,7 @@ extensions.configure<ApiValidationExtension> {
   )
 }
 
-// See https://stackoverflow.com/questions/25324880/detect-ide-environment-with-gradle
-val isRunningFromIde get() = project.properties["android.injected.invoked.from.ide"] == "true"
+val isRunningLocally get() = (System.getenv("CI") ?: "false").toBoolean()
 
 subprojects {
   repositories {
@@ -53,11 +52,9 @@ subprojects {
   tasks.withType<KotlinCompile> {
     kotlinOptions {
       // Allow warnings when running from IDE, makes it easier to experiment.
-      if (!isRunningFromIde) {
-        allWarningsAsErrors = true
-      }
+      allWarningsAsErrors = !isRunningLocally
 
-      jvmTarget = "1.6"
+      jvmTarget = "1.8"
     }
   }
 

@@ -3,14 +3,14 @@ object Versions {
    * To change this in the IDE, use `systemProp.square.kotlinVersion=x.y.z` in your
    * `~/.gradle/gradle.properties` file.
    */
-  val KotlinCompiler = System.getProperty("square.kotlinVersion") ?: "1.4.21"
+  val KotlinCompiler = System.getProperty("square.kotlinVersion") ?: "1.5.21"
 
   const val AndroidXTest = "1.3.0"
 }
 
 object Dependencies {
   object Build {
-    const val Android = "com.android.tools.build:gradle:4.2.0"
+    const val Android = "com.android.tools.build:gradle:4.2.1"
     const val MavenPublish = "com.vanniktech:gradle-maven-publish-plugin:0.12.0"
     val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KotlinCompiler}"
     const val Ktlint = "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
