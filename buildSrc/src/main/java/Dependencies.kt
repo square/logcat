@@ -22,7 +22,7 @@ object Dependencies {
   const val JUnit = "junit:junit:4.13"
   const val Mockito = "org.mockito:mockito-core:3.4.6"
   const val Robolectric = "org.robolectric:robolectric:4.3.1"
-  const val Truth = "com.google.truth:truth:1.0.1"
+  const val Truth = "com.google.truth:truth:1.1.3"
 
   object InstrumentationTests {
     const val Core = "androidx.test:core:${Versions.AndroidXTest}"
