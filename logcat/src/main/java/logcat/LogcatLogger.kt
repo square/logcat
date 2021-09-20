@@ -48,8 +48,12 @@ interface LogcatLogger {
     fun install(logger: LogcatLogger) {
       synchronized(this) {
         if (isInstalled) {
-          logger.log(ERROR, "LogcatLogger", "Installing $logger even though" +
-            " a logger was previously installed here: ${installedThrowable!!.asLog()}")
+          logger.log(
+            ERROR,
+            "LogcatLogger",
+            "Installing $logger even though a logger was previously installed here: " +
+              installedThrowable!!.asLog()
+          )
         }
         installedThrowable = RuntimeException("Previous logger installed here")
         Companion.logger = logger

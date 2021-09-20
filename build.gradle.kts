@@ -60,25 +60,11 @@ subprojects {
 
   // Configuration documentation: https://github.com/JLLeitschuh/ktlint-gradle#configuration
   configure<KtlintExtension> {
-    // Enable Kotlin 1.4 support.
-    version.set("0.38.1")
-
     // Prints the name of failed rules.
     verbose.set(true)
     reporters {
       // Default "plain" reporter is actually harder to read.
       reporter(ReporterType.JSON)
     }
-
-    disabledRules.set(
-      setOf(
-        // IntelliJ refuses to sort imports correctly.
-        // This is a known issue: https://github.com/pinterest/ktlint/issues/527
-        "import-ordering",
-        "indent",
-        "parameter-list-wrapping",
-        "final-newline"
-      )
-    )
   }
 }
