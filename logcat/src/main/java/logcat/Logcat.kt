@@ -5,83 +5,49 @@ package logcat
 import logcat.LogPriority.DEBUG
 
 /**
- * Kotlin utility for easy logging to logcat with cheap "magic tags" and lazy string evaluation.
+ * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
  *
- * This should be preferred to Timber whenever logging from Kotlin code, as Timber makes it easy to
- * create performance issues with eager string interpolation for no-op logs.
+ * The [logcat] function has 3 parameters: an optional [priority], an optional [tag], and a required
+ * string producing lambda ([message]). The lambda is only evaluated if a logger is installed and
+ * the logger deems the priority loggable.
  *
- * "Magic tags" in this context means using the simple class name of `this` at the call site as the tag
- * for the log.
+ * The priority defaults to [LogPriority.DEBUG].
+ *
+ * The tag defaults to the class name of the log call site, without any extra runtime cost. This works
+ * because [logcat] is an inlined extension function of [Any] and has access to [this] from which
+ * it can extract the class name. If logging from a standalone function which has no [this], use the
+ * [logcat] overload which requires a tag parameter.
+ *
+ * The [logcat] function does not take a [Throwable] parameter. Instead, the library provides
+ * a Throwable extension function: [Throwable.asLog] which returns a loggable string.
  *
  * ```
- * class ThingOwner {
- *   fun doTheThing() {
- *     // This will be logged with the "ThingOwner" tag.
- *     logcat { "Did the thing" }
+ * import logcat.LogPriority.INFO
+ * import logcat.asLog
+ * import logcat.logcat
+ *
+ * class MouseController {
+ *
+ *   fun play {
+ *     var state = "CHEEZBURGER"
+ *     logcat { "I CAN HAZ $state?" }
+ *     // logcat output: D/MouseController: I CAN HAZ CHEEZBURGER?
+ *
+ *     logcat(INFO) { "DID U ASK 4 MOAR INFO?" }
+ *     // logcat output: I/MouseController: DID U ASK 4 MOAR INFO?
+ *
+ *     logcat { exception.asLog() }
+ *     // logcat output: D/MouseController: java.lang.RuntimeException: FYLEZ KERUPTED
+ *     //                        at sample.MouseController.play(MouseController.kt:22)
+ *     //                        ...
+ *
+ *     logcat("Lolcat") { "OH HI" }
+ *     // logcat output: D/Lolcat: OH HI
  *   }
  * }
  * ```
  *
- * Timber also supports "magic tags", but only with a significant performance tax.
- *
- * Logcat supports everything we could do with Timber, here are a few recipes:
- *
- * ```
- * // Log with format
- * Timber.d("State is %s at time %d", state, time)
- * logcat { "State is $state at time $time" }
- *
- * // Log with priority
- * Timber.i("an info message")
- * logcat(INFO) { "an info message" }
- *
- * // Log exception
- * Timber.d(exception)
- * logcat { exception.asLog() }
- *
- * // Log exception with message
- * Timber.d(exception, "state is %s", state)
- * logcat { exception.asLog("state is $state") }
- *
- * // Log with custom tag
- * Timber.tag("MyTag").d("hi")
- * logcat("MyTag") { "hi" }
- * ```
- *
- * Note: if logging from a standalone function that has no `this`, you'll need to use the
- * overload [logcat] that requires providing a tag.
- *
- * Ideas behind this approach:
- *
- * - Log statements should be easy to write and readable => logcat() is a function that can be called
- * from any kotlin code. The support for throwable is explicitly layered as an extension function to
- * keep the signature and usage clear.
- * - Default tags should be the calling class name, for cheap => logcat() is an extension function on
- * [Any] and uses that to capture `this` and get its class name.
- * - Log statements should be no-ops when logging is not enabled => the logcat() function is inlined
- * and the message is defined as a string producer lambda that is inlined as well and never runs if
- * when logging is off (no string interpolation!).
- * - Most developers just want to "send something to logcat" without ever thinking about priority
- * So, we pick "debug" as the "right thing" by default, they shouldn't have to learn that they should
- * call .d().
- * - Also we've over time started assuming "Timber.d = goes to logcat", which is not obvious to
- * newcomers. Hence the name `logcat()` to avoid any confusion as to what this method does.
- * - If you do care about priority and make a choice, then we should make that choice very obvious,
- * not just a one letter difference.
- * - Having N methods, one for each priority level, is not great. It increases the API surface, and
- * when navigating to that code developers now have N methods (M overloads) to read.
- * - Timber.e() is generally assumed to exists for exceptions, but not really ! After all you can pass
- * a throwable to all timber methods, it's only there as a priority level to make things more visible.
- * So more confusion and choices / overloads.
- * Timber also makes the assumptions that different runtimes will send logs to different places, and
- * also depending on priorities. E.g. you might have Timber.w go to bugsnag as a warning. `logcat()`
- * very intentionally do not support that. We want you to decide "hey this should be a breadcrumb"
- * (which are on a small ring buffer) vs "hey this should go to logcat" vs
- * "hey this should be a bugsnag warning". Hence the idea of the method being named "logcat"
- * - The lack of throwable parameter is also intentional. It just creates more overloads and confusion
- * (what's the param order??), when really logs are about strings and all you need is a super easy way
- * to turn a throwable into a string for logs.
- *
+ * To install a logger, see [LogcatLogger].
  */
 inline fun Any.logcat(
   priority: LogPriority = DEBUG,

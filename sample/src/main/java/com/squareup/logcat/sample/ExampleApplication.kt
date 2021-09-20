@@ -2,6 +2,7 @@ package com.squareup.logcat.sample
 
 import android.app.Application
 import logcat.AndroidLogcatLogger
+import logcat.LogPriority.VERBOSE
 import logcat.LogcatLogger
 
 class ExampleApplication : Application() {
@@ -9,7 +10,7 @@ class ExampleApplication : Application() {
     super.onCreate()
     // Log in debug builds, no-op in release builds.
     if (BuildConfig.DEBUG) {
-      LogcatLogger.install(AndroidLogcatLogger())
+      LogcatLogger.install(AndroidLogcatLogger(minPriority = VERBOSE))
     }
   }
 }

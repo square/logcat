@@ -1,9 +1,26 @@
 package logcat
 
+import logcat.LogPriority.ERROR
+import logcat.LogcatLogger.Companion.install
+import logcat.LogcatLogger.Companion.uninstall
+
+/**
+ * Logger that [logcat] delegates to. Call [install] to install a new logger, the default is a
+ * no-op logger. Calling [uninstall] falls back to the default no-op logger.
+ *
+ * You should install [AndroidLogcatLogger] on Android and [PrintLogger] on a JVM.
+ */
 interface LogcatLogger {
 
+  /**
+   * Whether a log with the provided priority should be logged and the corresponding message
+   * providing lambda evaluated. Called by [logcat].
+   */
   fun isLoggable(priority: LogPriority) = true
 
+  /**
+   * Write a log to its destination. Called by [logcat].
+   */
   fun log(
     priority: LogPriority,
     tag: String,
@@ -17,25 +34,34 @@ interface LogcatLogger {
       private set
 
     @Volatile
-    private var installed: Throwable? = null
+    private var installedThrowable: Throwable? = null
 
+    private val isInstalled: Boolean
+      get() = installedThrowable != null
+
+    /**
+     * Installs a [LogcatLogger].
+     *
+     * It is an error to call [install] more than once without calling [uninstall] in between,
+     * however doing this won't throw, it'll log an error to the newly provided logger.
+     */
     fun install(logger: LogcatLogger) {
-      val loggerName = logger.toString()
       synchronized(this) {
-        if (Companion.logger !== NoLog) {
-          throw IllegalStateException(
-            "Cannot install $loggerName, already installed (see exception cause)", installed
-          )
+        if (isInstalled) {
+          logger.log(ERROR, "LogcatLogger", "Installing $logger even though" +
+            " a logger was previously installed here: ${installedThrowable!!.asLog()}")
         }
-        installed = RuntimeException("$loggerName first installed here")
+        installedThrowable = RuntimeException("Previous logger installed here")
         Companion.logger = logger
       }
-      logcat { "$loggerName installed" }
     }
 
+    /**
+     * Replaces the current logger (if any) with a no-op logger.
+     */
     fun uninstall() {
       synchronized(this) {
-        installed = null
+        installedThrowable = null
         logger = NoLog
       }
     }
