@@ -10,7 +10,8 @@ Logcat... ?
 * [FAQ](#faq)
 * [License](#license)
 
-![logo_512.png](assets/logo_512.png)
+![logo.png](assets/logo.png)
+_This fantastic logo is brought to you by [@rjrjr](https://github.com/rjrjr)._
 
 ## Usage
 
