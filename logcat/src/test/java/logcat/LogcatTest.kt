@@ -1,6 +1,7 @@
 package logcat
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import logcat.LogPriority.INFO
 import org.junit.After
 import org.junit.Test
@@ -135,7 +136,9 @@ class LogcatTest {
     }
     anonymousRunnable.run()
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+    assertWithMessage("${logger.latestLog!!.tag} should be ${LogcatTest::class.java.simpleName}").that(
+      logger.latestLog!!.tag
+    ).isEqualTo(LogcatTest::class.java.simpleName)
   }
 
   @Test fun `logcat() captures tag from companion function`() {
