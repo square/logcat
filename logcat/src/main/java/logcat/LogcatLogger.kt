@@ -2,7 +2,7 @@ package logcat
 
 interface LogcatLogger {
 
-  fun isLoggable(priority: LogPriority): Boolean
+  fun isLoggable(priority: LogPriority) = true
 
   fun log(
     priority: LogPriority,
@@ -19,7 +19,6 @@ interface LogcatLogger {
     @Volatile
     private var installed: Throwable? = null
 
-    @JvmStatic
     fun install(logger: LogcatLogger) {
       val loggerName = logger.toString()
       synchronized(this) {
@@ -34,7 +33,6 @@ interface LogcatLogger {
       logcat { "$loggerName installed" }
     }
 
-    @JvmStatic
     fun uninstall() {
       synchronized(this) {
         installed = null

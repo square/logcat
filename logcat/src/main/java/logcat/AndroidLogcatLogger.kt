@@ -8,10 +8,12 @@ private const val MAX_LOG_LENGTH = 4000
 
 /**
  * A [logcat] logger that delegates to [android.util.Log] for any log with a priority of
- * at least [minPriorityInt].
+ * at least [minPriorityInt], and is otherwise a no-op.
  *
  * Handles special cases for [LogPriority.ASSERT] (which requires sending to Log.wtf) and
  * splitting logs to be at most 4000 characters per line (otherwise logcat just truncates).
+ *
+ * The implementation is based on Timber DebugTree.
  */
 class AndroidLogcatLogger(private val minPriorityInt: Int = DEBUG.priorityInt) : LogcatLogger {
 

@@ -3,8 +3,6 @@
 package logcat
 
 import logcat.LogPriority.DEBUG
-import java.io.PrintWriter
-import java.io.StringWriter
 
 /**
  * Kotlin utility for easy logging to logcat with cheap "magic tags" and lazy string evaluation.
@@ -117,18 +115,6 @@ inline fun logcat(
       log(priority, tag, message())
     }
   }
-}
-
-fun Throwable.asLog(prefix: String = ""): String {
-  val stringWriter = StringWriter(256)
-  val printWriter = PrintWriter(stringWriter, false)
-  if (prefix.isNotEmpty()) {
-    printWriter.print(prefix)
-    printWriter.print('\n')
-  }
-  printStackTrace(printWriter)
-  printWriter.flush()
-  return stringWriter.toString()
 }
 
 @PublishedApi

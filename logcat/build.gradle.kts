@@ -39,8 +39,6 @@ tasks.withType<KotlinCompile> {
       "-Xallow-jvm-ir-dependencies",
       "-Xopt-in=kotlin.RequiresOptIn"
     )
-    // Allows calling static install method on LogcatLogger interface.
-    jvmTarget = "1.8"
   }
 }
 

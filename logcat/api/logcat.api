@@ -19,8 +19,6 @@ public final class logcat/LogPriority : java/lang/Enum {
 }
 
 public final class logcat/LogcatKt {
-	public static final fun asLog (Ljava/lang/Throwable;Ljava/lang/String;)Ljava/lang/String;
-	public static synthetic fun asLog$default (Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun classSimpleName (Ljava/lang/Object;)Ljava/lang/String;
 	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
@@ -30,14 +28,26 @@ public final class logcat/LogcatKt {
 
 public abstract interface class logcat/LogcatLogger {
 	public static final field Companion Llogcat/LogcatLogger$Companion;
-	public static fun install (Llogcat/LogcatLogger;)V
 	public abstract fun isLoggable (Llogcat/LogPriority;)Z
 	public abstract fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
-	public static fun uninstall ()V
 }
 
 public final class logcat/LogcatLogger$Companion {
 	public final fun install (Llogcat/LogcatLogger;)V
 	public final fun uninstall ()V
+}
+
+public final class logcat/LogcatLogger$DefaultImpls {
+	public static fun isLoggable (Llogcat/LogcatLogger;Llogcat/LogPriority;)Z
+}
+
+public final class logcat/PrintLogger : logcat/LogcatLogger {
+	public static final field INSTANCE Llogcat/PrintLogger;
+	public fun isLoggable (Llogcat/LogPriority;)Z
+	public fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class logcat/ThrowablesKt {
+	public static final fun asLog (Ljava/lang/Throwable;)Ljava/lang/String;
 }
 

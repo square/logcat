@@ -1,14 +1,16 @@
 package logcat
 
-import android.util.Log
-
+/**
+ * An enum for log priorities that map to [android.util.Log] priority constants
+ * without a direct import.
+ */
 enum class LogPriority(
   val priorityInt: Int
 ) {
-  VERBOSE(Log.VERBOSE),
-  DEBUG(Log.DEBUG),
-  INFO(Log.INFO),
-  WARN(Log.WARN),
-  ERROR(Log.ERROR),
-  ASSERT(Log.ASSERT);
+  VERBOSE(2),
+  DEBUG(3),
+  INFO(4),
+  WARN(5),
+  ERROR(6),
+  ASSERT(7);
 }
