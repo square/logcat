@@ -24,12 +24,6 @@ class LogcatTest {
     assertThat(count).isEqualTo(0)
   }
 
-  @Test fun `LogcatLogger logs an install message upon install`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this) }
-
-    assertThat(logger.latestLog!!.message).contains("installed")
-  }
-
   @Test fun `logcat() logs message from lambda`() {
     val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
 
