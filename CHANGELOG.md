@@ -1,11 +1,12 @@
 Change Log
 ==========
 
-Version 1.0
+Version 0.1
 -------------
 
-_2021-?-?_
+_2021-09-21_
 
-Initial release.
+Initial alpha release.
 
-* Nothing yet!
+* Everything is new!
+
