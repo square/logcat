@@ -66,8 +66,8 @@ import logcat.logcat
 
 class MouseController {
 
-  fun play {
-    var state = "CHEEZBURGER"
+  fun play() {
+    val state = "CHEEZBURGER"
     logcat { "I CAN HAZ $state?" }
     // logcat output: D/MouseController: I CAN HAZ CHEEZBURGER?
 

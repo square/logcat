@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   id("com.android.library")
   kotlin("android")
@@ -28,17 +26,6 @@ android {
 
   testOptions {
     execution = "ANDROIDX_TEST_ORCHESTRATOR"
-  }
-}
-
-tasks.withType<KotlinCompile> {
-  kotlinOptions {
-    freeCompilerArgs = listOfNotNull(
-      // allow-jvm-ir-dependencies is required to consume binaries built with the IR backend.
-      // It doesn't change the bytecode that gets generated for this module.
-      "-Xallow-jvm-ir-dependencies",
-      "-Xopt-in=kotlin.RequiresOptIn"
-    )
   }
 }
 
