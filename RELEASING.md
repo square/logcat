@@ -32,8 +32,8 @@ Add this to your `~/.gradle/gradle.properties`:
 signing.keyId=<KEY ID>
 signing.password=<KEY PASSWORD>
 signing.secretKeyRingFile=/Users/YOUR_USERNAME_/.gnupg/secring.gpg
-SONATYPE_NEXUS_USERNAME=<SONATYPE_USERNAME>
-SONATYPE_NEXUS_PASSWORD=<SONATYPE_PASSWORD>
+mavenCentralUsername=<SONATYPE_USERNAME>
+mavenCentralPassword=<SONATYPE_PASSWORD>
 ```
 
 ### Set up GitHub CLI
