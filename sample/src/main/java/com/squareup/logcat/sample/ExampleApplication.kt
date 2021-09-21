@@ -3,14 +3,11 @@ package com.squareup.logcat.sample
 import android.app.Application
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority.VERBOSE
-import logcat.LogcatLogger
 
 class ExampleApplication : Application() {
   override fun onCreate() {
     super.onCreate()
-    // Log in debug builds, no-op in release builds.
-    if (BuildConfig.DEBUG) {
-      LogcatLogger.install(AndroidLogcatLogger(minPriority = VERBOSE))
-    }
+    // Log all priorities in debug builds, no-op in release builds.
+    AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = VERBOSE)
   }
 }

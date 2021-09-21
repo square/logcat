@@ -33,15 +33,12 @@ Install `AndroidLogcatLogger` in `Application.onCreate()`:
 import android.app.Application
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority.VERBOSE
-import logcat.LogcatLogger
 
 class ExampleApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     // Log all priorities in debug builds, no-op in release builds.
-    if (BuildConfig.DEBUG) {
-      LogcatLogger.install(AndroidLogcatLogger(minPriority = VERBOSE))
-    }
+    AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = VERBOSE)
   }
 }
 ```
@@ -104,6 +101,10 @@ performance cost when logging is disabled.
 - Timber's `DebugTree` captures the calling class name as a tag by creating a stacktrace, which can
 be expensive. By making `logcat()` an extension function of `Any`, we can call `this::class.java`
 and get the calling context without creating a stacktrace.
+- The current implementation uses the outer most simple class name as the tag, i.e. the string
+between on the last `.` and the first `$`. That might not always be what you want. Also, when
+logging from an abstract class the tag will be the name of the subclass at runtime. We've found
+these limitations to be totally fine with us so far.
 - Most of the time, our developers just want to "send something to logcat" without even thinking
 about priority. `logcat()` picks "debug" as the right default to provide more consistency across
 a large codebase. Making the priority a parameter also means only one method to learn, and you

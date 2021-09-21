@@ -1,9 +1,15 @@
 public final class logcat/AndroidLogcatLogger : logcat/LogcatLogger {
+	public static final field Companion Llogcat/AndroidLogcatLogger$Companion;
 	public fun <init> ()V
 	public fun <init> (Llogcat/LogPriority;)V
 	public synthetic fun <init> (Llogcat/LogPriority;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun isLoggable (Llogcat/LogPriority;)Z
 	public fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class logcat/AndroidLogcatLogger$Companion {
+	public final fun installOnDebuggableApp (Landroid/app/Application;Llogcat/LogPriority;)V
+	public static synthetic fun installOnDebuggableApp$default (Llogcat/AndroidLogcatLogger$Companion;Landroid/app/Application;Llogcat/LogPriority;ILjava/lang/Object;)V
 }
 
 public final class logcat/LogPriority : java/lang/Enum {
@@ -19,11 +25,11 @@ public final class logcat/LogPriority : java/lang/Enum {
 }
 
 public final class logcat/LogcatKt {
-	public static final fun classSimpleName (Ljava/lang/Object;)Ljava/lang/String;
 	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public static synthetic fun logcat$default (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static final fun outerClassSimpleNameInternalOnlyDoNotUseKThxBye (Ljava/lang/Object;)Ljava/lang/String;
 }
 
 public abstract interface class logcat/LogcatLogger {
@@ -34,6 +40,7 @@ public abstract interface class logcat/LogcatLogger {
 
 public final class logcat/LogcatLogger$Companion {
 	public final fun install (Llogcat/LogcatLogger;)V
+	public final fun isInstalled ()Z
 	public final fun uninstall ()V
 }
 

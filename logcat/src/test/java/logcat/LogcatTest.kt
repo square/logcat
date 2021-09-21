@@ -143,7 +143,7 @@ class LogcatTest {
 
     companionFunctionLog { "Hi" }
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(Companion::class.java.simpleName)
+    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
   }
 
   companion object {

@@ -60,7 +60,7 @@ inline fun Any.logcat(
 ) {
   LogcatLogger.logger.let { logger ->
     if (logger.isLoggable(priority)) {
-      val tagOrCaller = tag ?: classSimpleName()
+      val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
       logger.log(priority, tagOrCaller, message())
     }
   }
@@ -84,13 +84,8 @@ inline fun logcat(
 }
 
 @PublishedApi
-internal fun Any.classSimpleName(): String {
+internal fun Any.outerClassSimpleNameInternalOnlyDoNotUseKThxBye(): String {
   val javaClass = this::class.java
-  val simpleName = javaClass.simpleName
-  if (simpleName.isNotEmpty()) {
-    return simpleName
-  }
-  // Anonymous objects have empty string as simple class name.
   val fullClassName = javaClass.name
   val outerClassName = fullClassName.substringBefore('$')
   val simplerOuterClassName = outerClassName.substringAfterLast('.')
