@@ -19,11 +19,11 @@ public final class logcat/LogPriority : java/lang/Enum {
 }
 
 public final class logcat/LogcatKt {
-	public static final fun classSimpleName (Ljava/lang/Object;)Ljava/lang/String;
 	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public static synthetic fun logcat$default (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static final fun outerClassSimpleNameInternalOnlyDoNotUseKThxBye (Ljava/lang/Object;)Ljava/lang/String;
 }
 
 public abstract interface class logcat/LogcatLogger {
