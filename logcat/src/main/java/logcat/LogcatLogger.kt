@@ -36,7 +36,7 @@ interface LogcatLogger {
     @Volatile
     private var installedThrowable: Throwable? = null
 
-    private val isInstalled: Boolean
+    val isInstalled: Boolean
       get() = installedThrowable != null
 
     /**

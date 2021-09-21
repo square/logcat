@@ -1,5 +1,7 @@
 package logcat
 
+import android.app.Application
+import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.util.Log
 import logcat.LogPriority.DEBUG
@@ -14,6 +16,8 @@ private const val MAX_TAG_LENGTH = 23
  *
  * Handles special cases for [LogPriority.ASSERT] (which requires sending to Log.wtf) and
  * splitting logs to be at most 4000 characters per line (otherwise logcat just truncates).
+ *
+ * Call [installOnDebuggableApp] to make sure you never log in release builds.
  *
  * The implementation is based on Timber DebugTree.
  */
@@ -68,4 +72,15 @@ class AndroidLogcatLogger(minPriority: LogPriority = DEBUG) : LogcatLogger {
       Log.println(priority, tag, part)
     }
   }
+
+  companion object {
+    fun installOnDebuggableApp(application: Application, minPriority: LogPriority = DEBUG) {
+      if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
+        LogcatLogger.install(AndroidLogcatLogger(minPriority))
+      }
+    }
+  }
 }
+
+private val Application.isDebuggableApp: Boolean
+  get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
