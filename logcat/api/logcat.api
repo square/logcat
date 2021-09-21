@@ -12,6 +12,9 @@ public final class logcat/AndroidLogcatLogger$Companion {
 	public static synthetic fun installOnDebuggableApp$default (Llogcat/AndroidLogcatLogger$Companion;Landroid/app/Application;Llogcat/LogPriority;ILjava/lang/Object;)V
 }
 
+public final class logcat/AndroidLogcatLoggerKt {
+}
+
 public final class logcat/LogPriority : java/lang/Enum {
 	public static final field ASSERT Llogcat/LogPriority;
 	public static final field DEBUG Llogcat/LogPriority;
@@ -39,6 +42,7 @@ public abstract interface class logcat/LogcatLogger {
 }
 
 public final class logcat/LogcatLogger$Companion {
+	public final fun getLogger ()Llogcat/LogcatLogger;
 	public final fun install (Llogcat/LogcatLogger;)V
 	public final fun isInstalled ()Z
 	public final fun uninstall ()V
