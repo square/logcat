@@ -10,7 +10,7 @@ A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
 
 * [Setup](#setup)
 * [Usage](#usage)
-* [Motivations](#faq)
+* [Motivations](#motivations)
 * [License](#license)
 
 ![logo_512.png](assets/logo_512.png)
