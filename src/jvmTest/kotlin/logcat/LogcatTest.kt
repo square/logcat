@@ -1,13 +1,14 @@
 package logcat
 
-import com.google.common.truth.Truth.assertThat
 import logcat.LogPriority.INFO
-import org.junit.After
-import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class LogcatTest {
 
-  @After
+  @AfterTest
   fun tearDown() {
     LogcatLogger.uninstall()
   }
@@ -19,9 +20,11 @@ class LogcatTest {
   @Test fun `when no logger set, the message lambda isn't invoked`() {
     var count = 0
 
-    logcat { "Yo${++count}" }
+    logcat {
+      "Yo${++count}"
+    }
 
-    assertThat(count).isEqualTo(0)
+    assertEquals(0, count)
   }
 
   @Test fun `logcat() logs message from lambda`() {
@@ -29,7 +32,7 @@ class LogcatTest {
 
     logcat { "Hi" }
 
-    assertThat(logger.latestLog!!.message).isEqualTo("Hi")
+    assertEquals("Hi", logger.latestLog!!.message)
   }
 
   @Test fun `logcat() captures tag from outer context class name`() {
@@ -37,7 +40,7 @@ class LogcatTest {
 
     logcat { "Hi" }
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+    assertEquals(LogcatTest::class.java.simpleName, logger.latestLog!!.tag)
   }
 
   @Test fun `logcat() tag overriding passes tag to logger`() {
@@ -45,7 +48,7 @@ class LogcatTest {
 
     logcat(tag = "Bonjour") { "Hi" }
 
-    assertThat(logger.latestLog!!.tag).isEqualTo("Bonjour")
+    assertEquals("Bonjour", logger.latestLog!!.tag)
   }
 
   @Test fun `logcat() passes priority to logger`() {
@@ -53,7 +56,7 @@ class LogcatTest {
 
     logcat(INFO) { "Hi" }
 
-    assertThat(logger.latestLog!!.priority).isEqualTo(INFO)
+    assertEquals(INFO, logger.latestLog!!.priority)
   }
 
   @Test fun `logcat() passes priority to isLoggable check`() {
@@ -63,7 +66,7 @@ class LogcatTest {
 
     logcat(INFO) { "Hi" }
 
-    assertThat(receivedPriority).isEqualTo(INFO)
+    assertEquals(INFO, receivedPriority)
   }
 
   @Test fun `when not loggable, the message lambda isn't invoked`() {
@@ -72,7 +75,7 @@ class LogcatTest {
 
     logcat { "Yo${++count}" }
 
-    assertThat(count).isEqualTo(0)
+    assertEquals(0, count)
   }
 
   @Test fun `Throwable asLogMessage() has stacktrace logged`() {
@@ -81,11 +84,12 @@ class LogcatTest {
 
     logcat { exception.asLog() }
 
-    assertThat(logger.latestLog!!.message).contains(
-      """
+    val stackTraceStr = """
       |java.lang.RuntimeException: damn
-    	|	at logcat.LogcatTest.Throwable asLogMessage() has stacktrace logged(LogcatTest.kt:
+      |	at logcat.LogcatTest.Throwable asLogMessage() has stacktrace logged(LogcatTest.kt:
       """.trimMargin()
+    assertTrue(
+      logger.latestLog!!.message.contains(stackTraceStr)
     )
   }
 
@@ -95,8 +99,8 @@ class LogcatTest {
     standaloneFunctionLog(tag = "Bonjour", message = { "Hi" })
 
     with(logger.latestLog!!) {
-      assertThat(tag).isEqualTo("Bonjour")
-      assertThat(message).isEqualTo("Hi")
+      assertEquals("Bonjour", tag)
+      assertEquals("Hi", message)
     }
   }
 
@@ -108,7 +112,7 @@ class LogcatTest {
     }
     lambda()
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+    assertEquals(LogcatTest::class.java.simpleName, logger.latestLog!!.tag)
   }
 
   @Test fun `logcat() captures outer this tag from nested lambda`() {
@@ -122,7 +126,7 @@ class LogcatTest {
     }
     lambda()
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+    assertEquals(LogcatTest::class.java.simpleName, logger.latestLog!!.tag)
   }
 
   @Test fun `logcat() captures outer this tag from anonymous object`() {
@@ -135,7 +139,7 @@ class LogcatTest {
     }
     anonymousRunnable.run()
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+    assertEquals(LogcatTest::class.java.simpleName, logger.latestLog!!.tag)
   }
 
   @Test fun `logcat() captures tag from companion function`() {
@@ -143,7 +147,7 @@ class LogcatTest {
 
     companionFunctionLog { "Hi" }
 
-    assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+    assertEquals(LogcatTest::class.java.simpleName, logger.latestLog!!.tag)
   }
 
   companion object {
@@ -159,5 +163,5 @@ fun standaloneFunctionLog(
   tag: String,
   message: () -> String
 ) {
-  logcat(tag, message = message)
+    logcat(tag, message = message)
 }
