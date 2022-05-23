@@ -12,9 +12,9 @@ import java.io.StringWriter
  * - The buffer size is 256 bytes instead of the default 16 bytes.
  */
 actual fun Throwable.asLog(): String {
-    val stringWriter = StringWriter(256)
-    val printWriter = PrintWriter(stringWriter, false)
-    printStackTrace(printWriter)
-    printWriter.flush()
-    return stringWriter.toString()
+  val stringWriter = StringWriter(256)
+  val printWriter = PrintWriter(stringWriter, false)
+  printStackTrace(printWriter)
+  printWriter.flush()
+  return stringWriter.toString()
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.util.Log
+import logcat.AndroidLogcatLogger.Companion.installOnDebuggableApp
 import logcat.LogPriority.DEBUG
 import kotlin.math.min
 
@@ -74,7 +75,10 @@ class AndroidLogcatLogger(minPriority: LogPriority = DEBUG) : LogcatLogger {
   }
 
   companion object {
-    fun installOnDebuggableApp(application: Application, minPriority: LogPriority = DEBUG) {
+    fun installOnDebuggableApp(
+      application: Application,
+      minPriority: LogPriority = DEBUG
+    ) {
       if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
         LogcatLogger.install(AndroidLogcatLogger(minPriority))
       }

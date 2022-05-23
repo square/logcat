@@ -17,10 +17,6 @@ kotlin {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
-//        withJava()
-//        testRuns["test"].executionTask.configure {
-//            useJUnitPlatform()
-//        }
     }
     js(IR) {
         browser {
@@ -33,8 +29,7 @@ kotlin {
     macosX64("native")  {
         binaries {
             sharedLib {
-                baseName = "logcat" // on Linux and macOS
-                // baseName = "libnative" // on Windows
+                baseName = "logcat"
             }
         }
     }

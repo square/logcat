@@ -3,18 +3,16 @@ package logcat
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 
+/**
+ * LogcatLogger for use in native test cases that provides an AtomicReference and
+ * object freezing to prevent InvalidMutabilityException when updating the latestLog
+ */
 class NativeTestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true }) :
-  LogcatLogger {
+  ITestLogcatLogger {
   override fun isLoggable(priority: LogPriority): Boolean = isLoggable.invoke(priority)
 
-  data class Log(
-    val priority: LogPriority,
-    val tag: String,
-    val message: String
-  )
-
   private var _latestLog: AtomicReference<Log?> = AtomicReference(null)
-  var latestLog: Log?
+  override var latestLog: Log?
     set(value) {
       _latestLog.value = value.freeze()
     }

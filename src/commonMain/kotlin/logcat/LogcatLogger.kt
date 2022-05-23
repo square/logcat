@@ -4,7 +4,7 @@ package logcat
  * Logger that [logcat] delegates to. Call [install] to install a new logger, the default is a
  * no-op logger. Calling [uninstall] falls back to the default no-op logger.
  *
- * You should install [AndroidLogcatLogger] on Android and [PrintLogger] on a JVM.
+ * You should install [AndroidLogcatLogger] on Android and [PrintLogger] on a JVM/JS/Native.
  */
 interface LogcatLogger {
 
@@ -24,24 +24,11 @@ interface LogcatLogger {
   )
 
   companion object {
-    // For expect functions above
+    // For expect functions below
   }
-
 }
 
-/**
- * Implementation of NoLog - the default log to which no messages should be sent
- */
-internal object NoLog : LogcatLogger {
-  override fun isLoggable(priority: LogPriority) = false
-
-  override fun log(
-    priority: LogPriority,
-    tag: String,
-    message: String
-  ) = error("Should never receive any log")
-}
-
+// region `expected` api for LogcatLogger.Companion
 /**
  * The logger to use
  */
@@ -62,3 +49,17 @@ expect fun LogcatLogger.Companion.install(logger: LogcatLogger)
  * Replaces the current logger (if any) with a no-op logger.
  */
 expect fun LogcatLogger.Companion.uninstall()
+// endregion `expected` functions for LogcatLogger.Companion
+
+/**
+ * Implementation of NoLog - the default log to which no messages should be sent
+ */
+internal object NoLog : LogcatLogger {
+  override fun isLoggable(priority: LogPriority) = false
+
+  override fun log(
+    priority: LogPriority,
+    tag: String,
+    message: String
+  ) = error("Should never receive any log")
+}
