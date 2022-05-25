@@ -65,14 +65,15 @@ class CommonLogcatTest {
   }
 
   @Test fun when_not_loggable_the_message_lambda_is_not_invoked() {
-    platformTestLogger(isLoggable = { false }).apply { LogcatLogger.install(this); latestLog = null }
+    platformTestLogger(isLoggable = { false }).apply {
+      LogcatLogger.install(this); latestLog = null
+    }
     var count = 0
 
     logcat { "Yo${++count}" }
 
     assertEquals(0, count)
   }
-
 
   @Test fun standalone_function_can_log_with_tag() {
     val logger = platformTestLogger().apply { LogcatLogger.install(this); latestLog = null }

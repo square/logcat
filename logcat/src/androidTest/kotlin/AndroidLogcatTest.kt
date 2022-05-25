@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class LogcatTest {
+class AndroidLogcatTest {
 
   @AfterTest
   fun tearDown() {
@@ -31,11 +31,10 @@ class LogcatTest {
 
     val stackTraceStr = """
       |java.lang.RuntimeException: damn
-      |	at logcat.LogcatTest.Throwable asLogMessage() has stacktrace logged(AndroidLogcatTest.kt:
+      |	at logcat.AndroidLogcatTest.Throwable asLogMessage() has stacktrace logged(AndroidLogcatTest.kt:
       """.trimMargin()
     assertTrue(
       logger.latestLog!!.message.contains(stackTraceStr)
     )
   }
-
 }

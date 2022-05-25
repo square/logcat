@@ -6,14 +6,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class JvmLogcatTest {
+class JsLogcatTest {
 
   @AfterTest
   fun tearDown() {
     LogcatLogger.uninstall()
   }
 
-  @Test fun `logcat() passes priority to isLoggable check`() {
+  @Test fun logcat_passes_priority_to_isLoggable_check() {
     var receivedPriority: LogPriority? = null
     TestLogcatLogger(isLoggable = { receivedPriority = it; true })
       .apply { LogcatLogger.install(this); latestLog = null }
@@ -23,19 +23,18 @@ class JvmLogcatTest {
     assertEquals(INFO, receivedPriority)
   }
 
-  @Test fun `Throwable asLogMessage() has stacktrace logged`() {
+  @Test fun Throwable_asLogMessage_has_stacktrace_logged() {
     val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
     val exception = RuntimeException("damn")
 
     logcat { exception.asLog() }
 
     val stackTraceStr = """
-      |java.lang.RuntimeException: damn
-      |	at logcat.JvmLogcatTest.Throwable asLogMessage() has stacktrace logged(JvmLogcatTest.kt:
+      |RuntimeException: damn
+      |    at JsLogcatTest.Throwable_asLogMessage_has_stacktrace_logged
       """.trimMargin()
     assertTrue(
       logger.latestLog!!.message.contains(stackTraceStr)
     )
   }
-
 }

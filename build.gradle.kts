@@ -1,104 +1,70 @@
-plugins {
-  kotlin("multiplatform") version "1.6.20"
-  id("com.android.library")
-}
+import kotlinx.validation.ApiValidationExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
-group = "logcatx"
-version = "1.0-SNAPSHOT"
+println("Building with Kotlin compiler version ${Versions.KotlinCompiler}")
 
-repositories {
+buildscript {
+  repositories {
     mavenCentral()
     gradlePluginPortal()
     google()
+    // For binary compatibility validator.
+    maven { url = uri("https://kotlin.bintray.com/kotlinx") }
+  }
+
+  dependencies {
+    classpath(Dependencies.Build.Android)
+    classpath(Dependencies.Build.MavenPublish)
+    classpath(Dependencies.Build.Kotlin)
+    classpath(Dependencies.Build.Ktlint)
+    classpath(Dependencies.Build.BinaryCompatibility)
+  }
 }
 
-kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-    }
-    js(IR) {
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
-        binaries.executable()
-    }
-    macosX64("native")  {
-        binaries {
-            sharedLib {
-                baseName = "logcat"
-            }
-        }
-    }
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
+// We use JetBrain's Kotlin Binary Compatibility Validator to track changes to our public binary
+// APIs.
+// When making a change that results in a public ABI change, the apiCheck task will fail. When this
+// happens, run ./gradlew apiDump to generate updated *.api files, and add those to your commit.
+// See https://github.com/Kotlin/binary-compatibility-validator
+apply(plugin = "binary-compatibility-validator")
 
-    android()
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-        val jvmMain by getting
-        val jvmTest by getting {
-            dependencies {
-                implementation("com.google.truth:truth:1.1.3")
-            }
-        }
-        val jsMain by getting
-        val jsTest by getting
-        val nativeMain by getting
-        val nativeTest by getting
-        val androidMain by getting {
-          dependencies {
-            implementation("com.google.android.material:material:1.2.1")
-          }
-        }
-        val androidTest by getting {
-          dependencies {
-            implementation("junit:junit:4.13")
-          }
-        }
-    }
+extensions.configure<ApiValidationExtension> {
+  // Ignore all sample projects, since they're not part of our API.
+  // Only leaf project name is valid configuration, and every project must be individually ignored.
+  // See https://github.com/Kotlin/binary-compatibility-validator/issues/3
+  ignoredProjects = mutableSetOf(
+    "sample"
+  )
 }
 
-android {
-  compileSdkVersion(30)
-  sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+val isRunningLocally get() = (System.getenv("CI") ?: "false").toBoolean()
 
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+subprojects {
+  repositories {
+    google()
+    mavenCentral()
   }
 
-  defaultConfig {
-    minSdkVersion(14)
-    targetSdkVersion(30)
-    versionCode = 1
-    versionName = "1.0"
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+  tasks.withType<KotlinCompile> {
+    kotlinOptions {
+      // Allow warnings when running from IDE, makes it easier to experiment.
+      allWarningsAsErrors = !isRunningLocally
+
+      jvmTarget = "1.8"
+    }
   }
 
-  buildFeatures {
-    buildConfig = false
-  }
-
-  testOptions {
-    execution = "ANDROIDX_TEST_ORCHESTRATOR"
+  // Configuration documentation: https://github.com/JLLeitschuh/ktlint-gradle#configuration
+  configure<KtlintExtension> {
+    // Prints the name of failed rules.
+    verbose.set(true)
+    reporters {
+      // Default "plain" reporter is actually harder to read.
+      reporter(ReporterType.JSON)
+    }
   }
 }
