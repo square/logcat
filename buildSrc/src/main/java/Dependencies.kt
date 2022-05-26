@@ -23,6 +23,7 @@ object Dependencies {
   const val Mockito = "org.mockito:mockito-core:3.4.6"
   const val Robolectric = "org.robolectric:robolectric:4.3.1"
   const val Truth = "com.google.truth:truth:1.1.3"
+  const val Coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
 
   object InstrumentationTests {
     const val Core = "androidx.test:core:${Versions.AndroidXTest}"

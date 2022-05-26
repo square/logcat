@@ -3,9 +3,6 @@ plugins {
   id("com.android.library")
 }
 
-group = "logcatx"
-version = "1.0-SNAPSHOT"
-
 repositories {
   mavenCentral()
   gradlePluginPortal()
@@ -46,7 +43,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+        implementation(Dependencies.Coroutines)
       }
     }
     val commonTest by getting {
@@ -57,28 +54,24 @@ kotlin {
     val jvmMain by getting
     val jvmTest by getting {
       dependencies {
-        implementation("com.google.truth:truth:1.1.3")
+        implementation(Dependencies.Truth)
       }
     }
     val jsMain by getting
     val jsTest by getting
     val nativeMain by getting
     val nativeTest by getting
-    val androidMain by getting {
-      dependencies {
-        implementation("com.google.android.material:material:1.2.1")
-      }
-    }
+    val androidMain by getting
     val androidTest by getting {
       dependencies {
-        implementation("junit:junit:4.13")
+        implementation(Dependencies.JUnit)
       }
     }
   }
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdk = 30
   sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
   compileOptions {
@@ -87,8 +80,8 @@ android {
   }
 
   defaultConfig {
-    minSdkVersion(14)
-    targetSdkVersion(30)
+    minSdk = 14
+    targetSdk = 30
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
