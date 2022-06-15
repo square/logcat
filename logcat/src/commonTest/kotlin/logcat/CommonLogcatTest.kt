@@ -132,30 +132,11 @@ class CommonLogcatTest {
     assertEquals(CommonLogcatTest::class.simpleName, logger.latestLog!!.tag)
   }
 
-  @Test fun logcat_captures_tag_from_nested_companion_function() {
-    val logger = platformTestLogger().apply { LogcatLogger.install(this); latestLog = null }
-
-    nestedCompanionFunctionLog { "Hi" }
-
-    assertEquals(CommonLogcatTest::class.simpleName, logger.latestLog!!.tag)
-  }
-
   companion object {
     fun companionFunctionLog(
       message: () -> String
     ) {
       logcat(message = message)
-    }
-
-    fun nestedCompanionFunctionLog(
-      message: () -> String
-    ) {
-      fun anotherNestedFunctionLog(
-        message: () -> String
-      ) {
-        logcat(message = message)
-      }
-      anotherNestedFunctionLog(message)
     }
   }
 }

@@ -28,6 +28,9 @@ kotlin {
       sharedLib {
         baseName = "logcat"
       }
+      framework {
+        baseName = "Logcat"
+      }
     }
   }
   val hostOs = System.getProperty("os.name")
@@ -41,14 +44,11 @@ kotlin {
 
   android()
   sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(Dependencies.Coroutines)
-      }
-    }
+    val commonMain by getting
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
+        implementation(Dependencies.Coroutines)
       }
     }
     val jvmMain by getting
