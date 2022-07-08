@@ -1,6 +1,7 @@
 package logcat
 
-actual fun Any.outerClassSimpleNameInternalOnlyDoNotUseKThxBye(): String {
+@PublishedApi
+internal actual fun Any.outerClassSimpleNameInternalOnlyDoNotUseKThxBye(): String {
   val javaClass = this::class.java
   val fullClassName = javaClass.name
   val outerClassName = fullClassName.substringBefore('$')

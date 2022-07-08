@@ -17,13 +17,16 @@ kotlin {
   }
   js(IR) {
     browser {
-      commonWebpackConfig {
-        cssSupport.enabled = true
-      }
+    }
+    nodejs {
     }
     binaries.executable()
   }
-  macosX64("native") {
+  android()
+  ios()
+  watchos()
+  tvos()
+  macosX64() {
     binaries {
       sharedLib {
         baseName = "logcat"
@@ -33,16 +36,15 @@ kotlin {
       }
     }
   }
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val nativeTarget = when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
+  macosArm64()
+  linuxArm64()
+  linuxArm32Hfp()
+  linuxMips32()
+  linuxMipsel32()
+  linuxX64()
+  mingwX64()
+  mingwX86()
 
-  android()
   sourceSets {
     val commonMain by getting
     val commonTest by getting {
@@ -59,9 +61,87 @@ kotlin {
     }
     val jsMain by getting
     val jsTest by getting
-    val nativeMain by getting
-    val nativeTest by getting
-    val androidMain by getting
+    val nativeMain by creating {
+      dependsOn(commonMain)
+    }
+    val nativeTest by creating {
+      dependsOn(commonTest)
+    }
+    val macosX64Main by getting {
+      dependsOn(nativeMain)
+    }
+    val macosX64Test by getting {
+      dependsOn(nativeTest)
+    }
+    val macosArm64Main by getting {
+      dependsOn(nativeMain)
+    }
+    val macosArm64Test by getting {
+      dependsOn(nativeTest)
+    }
+    val linuxX64Main by getting {
+      dependsOn(nativeMain)
+    }
+    val linuxX64Test by getting {
+      dependsOn(nativeTest)
+    }
+    val linuxArm64Main by getting {
+      dependsOn(nativeMain)
+    }
+    val linuxArm64Test by getting {
+      dependsOn(nativeTest)
+    }
+    val linuxArm32HfpMain by getting {
+      dependsOn(nativeMain)
+    }
+    val linuxArm32HfpTest by getting {
+      dependsOn(nativeTest)
+    }
+    val linuxMips32Main by getting {
+      dependsOn(nativeMain)
+    }
+    val linuxMips32Test by getting {
+      dependsOn(nativeTest)
+    }
+    val linuxMipsel32Main by getting {
+      dependsOn(nativeMain)
+    }
+    val linuxMipsel32Test by getting {
+      dependsOn(nativeTest)
+    }
+    val mingwX64Main by getting {
+      dependsOn(nativeMain)
+    }
+    val mingwX64Test by getting {
+      dependsOn(nativeTest)
+    }
+    val mingwX86Main by getting {
+      dependsOn(nativeMain)
+    }
+    val mingwX86Test by getting {
+      dependsOn(nativeTest)
+    }
+    val iosMain by getting {
+      dependsOn(nativeMain)
+    }
+    val iosTest by getting {
+      dependsOn(nativeTest)
+    }
+    val watchosMain by getting {
+      dependsOn(nativeMain)
+    }
+    val watchosTest by getting {
+      dependsOn(nativeTest)
+    }
+    val tvosMain by getting {
+      dependsOn(nativeMain)
+    }
+    val tvosTest by getting {
+      dependsOn(nativeTest)
+    }
+    val androidMain by getting {
+      dependsOn(jvmMain)
+    }
     val androidTest by getting {
       dependencies {
         implementation(Dependencies.JUnit)

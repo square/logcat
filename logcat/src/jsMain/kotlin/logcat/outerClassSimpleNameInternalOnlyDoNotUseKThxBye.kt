@@ -28,7 +28,8 @@ private fun fallbackToThrowableIck(): String {
     .substringBefore(".")
 }
 
-actual fun Any.outerClassSimpleNameInternalOnlyDoNotUseKThxBye(): String {
+@PublishedApi
+internal actual fun Any.outerClassSimpleNameInternalOnlyDoNotUseKThxBye(): String {
   val javascriptClass = this::class
   val fullClassName = javascriptClass.js.name
   val outerClassName = fullClassName.substringBefore('$')
