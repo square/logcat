@@ -31,7 +31,7 @@ class AndroidLogcatTest {
 
     val stackTraceStr = """
       |java.lang.RuntimeException: damn
-      |	at logcat.AndroidLogcatTest.Throwable asLogMessage() has stacktrace logged(AndroidLogcatTest.kt:
+      |	at logcat.AndroidLogcatTest.Throwable asLogMessage fun has stacktrace logged(AndroidLogcatTest.kt:
       """.trimMargin()
     assertTrue(
       logger.latestLog!!.message.contains(stackTraceStr)

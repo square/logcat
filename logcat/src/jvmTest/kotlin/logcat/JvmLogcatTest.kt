@@ -29,9 +29,11 @@ class JvmLogcatTest {
 
     logcat { exception.asLog() }
 
+    println(exception.asLog())
+
     val stackTraceStr = """
       |java.lang.RuntimeException: damn
-      |	at logcat.JvmLogcatTest.Throwable asLogMessage() has stacktrace logged(JvmLogcatTest.kt:
+      |	at logcat.JvmLogcatTest.Throwable asLogMessage fun has stacktrace logged(JvmLogcatTest.kt:
       """.trimMargin()
     assertTrue(
       logger.latestLog!!.message.contains(stackTraceStr)
