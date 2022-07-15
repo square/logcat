@@ -1,5 +1,5 @@
 package logcat
 
-actual fun platformTestLogger(isLoggable: (LogPriority) -> Boolean): ITestLogcatLogger {
-  return TestLogcatLogger(isLoggable = isLoggable)
+actual fun platformTestLogger(isLoggable: (LogPriority) -> Boolean): TestLogcatLogger {
+  return CommonTestLogcatLogger(isLoggable = isLoggable)
 }

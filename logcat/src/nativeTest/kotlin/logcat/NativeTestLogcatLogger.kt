@@ -8,7 +8,7 @@ import kotlin.native.concurrent.freeze
  * object freezing to prevent InvalidMutabilityException when updating the latestLog
  */
 class NativeTestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true }) :
-  ITestLogcatLogger {
+  TestLogcatLogger {
   override fun isLoggable(priority: LogPriority): Boolean = isLoggable.invoke(priority)
 
   private var _latestLog: AtomicReference<Log?> = AtomicReference(null)

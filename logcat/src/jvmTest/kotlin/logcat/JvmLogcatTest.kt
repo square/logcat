@@ -15,7 +15,7 @@ class JvmLogcatTest {
 
   @Test fun `logcat() passes priority to isLoggable check`() {
     var receivedPriority: LogPriority? = null
-    TestLogcatLogger(isLoggable = { receivedPriority = it; true })
+    platformTestLogger(isLoggable = { receivedPriority = it; true })
       .apply { LogcatLogger.install(this); latestLog = null }
 
     logcat(INFO) { "Hi" }
@@ -24,7 +24,7 @@ class JvmLogcatTest {
   }
 
   @Test fun `Throwable asLogMessage() has stacktrace logged`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    val logger = platformTestLogger().apply { LogcatLogger.install(this); latestLog = null }
     val exception = RuntimeException("damn")
 
     logcat { exception.asLog() }

@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 
 /**
  * Common logcat tests that require only a different platform logger to execute.  An
- * instance of the platform logger that follows the ITestLogcatLogger interface is
+ * instance of the platform logger that follows the TestLogcatLogger interface is
  * obtained by calling `platformTestLogger()`
  */
 class CommonLogcatTest {

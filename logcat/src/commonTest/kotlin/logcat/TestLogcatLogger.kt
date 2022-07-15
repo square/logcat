@@ -1,19 +1,9 @@
 package logcat
 
 /**
- * Standard implementation of a LogcatLogger that can be used on Android/JVM/JS
+ * Extension of the LogcatLogger interface provided in the logcat library that
+ * provides access to `latestLog` for inspection during tests.
  */
-class TestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true }) :
-  ITestLogcatLogger {
-  override fun isLoggable(priority: LogPriority): Boolean = isLoggable.invoke(priority)
-
-  override var latestLog: Log? = null
-
-  override fun log(
-    priority: LogPriority,
-    tag: String,
-    message: String
-  ) {
-    latestLog = Log(priority, tag, message)
-  }
+interface TestLogcatLogger : LogcatLogger {
+  var latestLog: Log?
 }
