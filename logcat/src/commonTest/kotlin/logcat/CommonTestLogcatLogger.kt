@@ -1,15 +1,13 @@
 package logcat
 
-class TestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true }) : LogcatLogger {
+/**
+ * Standard implementation of a LogcatLogger that can be used on Android/JVM/JS
+ */
+class CommonTestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true }) :
+  TestLogcatLogger {
   override fun isLoggable(priority: LogPriority): Boolean = isLoggable.invoke(priority)
 
-  data class Log(
-    val priority: LogPriority,
-    val tag: String,
-    val message: String
-  )
-
-  var latestLog: Log? = null
+  override var latestLog: Log? = null
 
   override fun log(
     priority: LogPriority,
