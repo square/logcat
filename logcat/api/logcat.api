@@ -12,9 +12,6 @@ public final class logcat/AndroidLogcatLogger$Companion {
 	public static synthetic fun installOnDebuggableApp$default (Llogcat/AndroidLogcatLogger$Companion;Landroid/app/Application;Llogcat/LogPriority;ILjava/lang/Object;)V
 }
 
-public final class logcat/AndroidLogcatLoggerKt {
-}
-
 public final class logcat/LogPriority : java/lang/Enum {
 	public static final field ASSERT Llogcat/LogPriority;
 	public static final field DEBUG Llogcat/LogPriority;
@@ -22,16 +19,17 @@ public final class logcat/LogPriority : java/lang/Enum {
 	public static final field INFO Llogcat/LogPriority;
 	public static final field VERBOSE Llogcat/LogPriority;
 	public static final field WARN Llogcat/LogPriority;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getPriorityInt ()I
 	public static fun valueOf (Ljava/lang/String;)Llogcat/LogPriority;
 	public static fun values ()[Llogcat/LogPriority;
 }
 
 public final class logcat/LogcatKt {
-	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
-	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
-	public static synthetic fun logcat$default (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Llogcat/MessageSupplier;)V
+	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Llogcat/MessageSupplier;)V
+	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Llogcat/MessageSupplier;ILjava/lang/Object;)V
+	public static synthetic fun logcat$default (Ljava/lang/String;Llogcat/LogPriority;Llogcat/MessageSupplier;ILjava/lang/Object;)V
 	public static final fun outerClassSimpleNameInternalOnlyDoNotUseKThxBye (Ljava/lang/Object;)Ljava/lang/String;
 }
 
@@ -50,6 +48,10 @@ public final class logcat/LogcatLogger$Companion {
 
 public final class logcat/LogcatLogger$DefaultImpls {
 	public static fun isLoggable (Llogcat/LogcatLogger;Llogcat/LogPriority;)Z
+}
+
+public abstract interface class logcat/MessageSupplier {
+	public abstract fun getMessage ()Ljava/lang/String;
 }
 
 public final class logcat/PrintLogger : logcat/LogcatLogger {

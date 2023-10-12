@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdk = 34
 
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -13,11 +13,9 @@ android {
   }
 
   defaultConfig {
-    minSdkVersion(14)
-    targetSdkVersion(30)
-    versionCode = 1
-    versionName = "1.0"
+    minSdk = 14
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    namespace = "com.squareup.logcat"
   }
 
   buildFeatures {

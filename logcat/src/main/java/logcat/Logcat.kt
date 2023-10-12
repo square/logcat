@@ -1,5 +1,4 @@
 @file:Suppress("NOTHING_TO_INLINE")
-
 package logcat
 
 import logcat.LogPriority.DEBUG
@@ -8,8 +7,8 @@ import logcat.LogPriority.DEBUG
  * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
  *
  * The [logcat] function has 3 parameters: an optional [priority], an optional [tag], and a required
- * string producing lambda ([message]). The lambda is only evaluated if a logger is installed and
- * the logger deems the priority loggable.
+ * string producing lambda ([messageSupplier]). The lambda is only evaluated if a logger is
+ * installed and the logger deems the priority loggable.
  *
  * The priority defaults to [LogPriority.DEBUG].
  *
@@ -56,12 +55,12 @@ inline fun Any.logcat(
    * site.
    */
   tag: String? = null,
-  message: () -> String
+  messageSupplier: MessageSupplier
 ) {
   LogcatLogger.logger.let { logger ->
     if (logger.isLoggable(priority)) {
       val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
-      logger.log(priority, tagOrCaller, message())
+      logger.log(priority, tagOrCaller, messageSupplier.getMessage())
     }
   }
 }
@@ -74,13 +73,20 @@ inline fun Any.logcat(
 inline fun logcat(
   tag: String,
   priority: LogPriority = DEBUG,
-  message: () -> String
+  messageSupplier: MessageSupplier
 ) {
   with(LogcatLogger.logger) {
     if (isLoggable(priority)) {
-      log(priority, tag, message())
+      log(priority, tag, messageSupplier.getMessage())
     }
   }
+}
+
+/**
+ * Function to lazily provide a log message, if it is ever needed.
+ */
+fun interface MessageSupplier {
+  fun getMessage(): String
 }
 
 @PublishedApi
