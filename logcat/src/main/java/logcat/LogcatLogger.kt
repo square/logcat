@@ -36,6 +36,7 @@ interface LogcatLogger {
     @Volatile
     private var installedThrowable: Throwable? = null
 
+    @JvmStatic
     val isInstalled: Boolean
       get() = installedThrowable != null
 
@@ -45,6 +46,7 @@ interface LogcatLogger {
      * It is an error to call [install] more than once without calling [uninstall] in between,
      * however doing this won't throw, it'll log an error to the newly provided logger.
      */
+    @JvmStatic
     fun install(logger: LogcatLogger) {
       synchronized(this) {
         if (isInstalled) {
@@ -63,6 +65,7 @@ interface LogcatLogger {
     /**
      * Replaces the current logger (if any) with a no-op logger.
      */
+    @JvmStatic
     fun uninstall() {
       synchronized(this) {
         installedThrowable = null
