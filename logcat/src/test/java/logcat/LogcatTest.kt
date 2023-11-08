@@ -146,6 +146,37 @@ class LogcatTest {
     assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
   }
 
+  @Test fun `installing a new Logger when one was already present, logs an error`() {
+    TestLogcatLogger().apply { LogcatLogger.install(this) }.latestLog.let { latestLog ->
+      // Expect no logcat messages to start.
+      assertThat(latestLog).isNull()
+    }
+    TestLogcatLogger().apply { LogcatLogger.install(this) }.latestLog.let { latestLog ->
+      latestLog!!.let {
+        assertThat(it.tag).isEqualTo("LogcatLogger")
+        assertThat(it.priority).isEqualTo(LogPriority.ERROR)
+        assertThat(it.message).isNotEmpty()
+      }
+    }
+  }
+
+  @Test fun `replacing a Logger when one was already present, this is fine`() {
+    TestLogcatLogger().apply { LogcatLogger.install(this) }.latestLog.let { latestLog ->
+      // Expect no logcat messages to start.
+      assertThat(latestLog).isNull()
+    }
+    TestLogcatLogger().apply { LogcatLogger.replace(this) }.latestLog.let { latestLog ->
+      assertThat(latestLog).isNull()
+    }
+  }
+
+  @Test fun `replace is lenient, it is fine to replace when no Logger previously installed`() {
+    TestLogcatLogger().apply { LogcatLogger.replace(this) }.latestLog.let { latestLog ->
+      // Expect no logcat messages to start.
+      assertThat(latestLog).isNull()
+    }
+  }
+
   companion object {
     fun companionFunctionLog(
       message: () -> String

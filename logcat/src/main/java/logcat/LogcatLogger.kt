@@ -69,6 +69,16 @@ interface LogcatLogger {
         logger = NoLog
       }
     }
+
+    /**
+     * Replaces the current logger (if any) with a new logger.
+     */
+    fun replace(logger: LogcatLogger) {
+      synchronized(this) {
+        installedThrowable = RuntimeException("Previous logger installed here")
+        Companion.logger = logger
+      }
+    }
   }
 
   private object NoLog : LogcatLogger {
@@ -78,6 +88,6 @@ interface LogcatLogger {
       priority: LogPriority,
       tag: String,
       message: String
-    ) = error("Should never receive any log")
+    ) = Unit
   }
 }
