@@ -150,7 +150,7 @@ class LogcatTest {
     fun companionFunctionLog(
       message: () -> String
     ) {
-      logcat(message = message)
+      logcat(messageSupplier = message)
     }
   }
 }
@@ -159,5 +159,5 @@ fun standaloneFunctionLog(
   tag: String,
   message: () -> String
 ) {
-  logcat(tag, message = message)
+  logcat(tag, messageSupplier = message)
 }
