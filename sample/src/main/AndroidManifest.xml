@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.squareup.logcat.sample">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <application
       android:label="Logcat"
@@ -8,6 +7,7 @@
       >
 
     <activity
+        android:exported="true"
         android:name=".MainActivity"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
       <intent-filter>

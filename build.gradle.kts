@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.SonatypeHost
 import kotlinx.validation.ApiValidationExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
@@ -10,8 +13,6 @@ buildscript {
     mavenCentral()
     gradlePluginPortal()
     google()
-    // For binary compatibility validator.
-    maven { url = uri("https://kotlin.bintray.com/kotlinx") }
   }
 
   dependencies {
@@ -20,6 +21,9 @@ buildscript {
     classpath(Dependencies.Build.Kotlin)
     classpath(Dependencies.Build.Ktlint)
     classpath(Dependencies.Build.BinaryCompatibility)
+    // Required for the gradle-maven-publish-plugin plugin.
+    // See https://github.com/vanniktech/gradle-maven-publish-plugin/issues/205.
+    classpath(Dependencies.Build.Dokka)
   }
 }
 
@@ -39,7 +43,8 @@ extensions.configure<ApiValidationExtension> {
   )
 }
 
-val isRunningLocally get() = (System.getenv("CI") ?: "false").toBoolean()
+// See https://stackoverflow.com/questions/25324880/detect-ide-environment-with-gradle
+val isRunningFromIde get() = project.properties["android.injected.invoked.from.ide"] == "true"
 
 subprojects {
   repositories {
@@ -49,10 +54,24 @@ subprojects {
 
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
+  plugins.withId("com.vanniktech.maven.publish.base") {
+    configure<MavenPublishBaseExtension> {
+      publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
+      signAllPublications()
+      pomFromGradleProperties()
+
+      configure(
+        AndroidSingleVariantLibrary(variant = "release", sourcesJar = true, publishJavadocJar = true),
+      )
+    }
+  }
+
   tasks.withType<KotlinCompile> {
     kotlinOptions {
       // Allow warnings when running from IDE, makes it easier to experiment.
-      allWarningsAsErrors = !isRunningLocally
+      if (!isRunningFromIde) {
+        allWarningsAsErrors = true
+      }
 
       jvmTarget = "1.8"
     }

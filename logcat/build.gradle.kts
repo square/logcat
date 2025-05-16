@@ -1,11 +1,11 @@
 plugins {
   id("com.android.library")
   kotlin("android")
-  id("com.vanniktech.maven.publish")
+  id("com.vanniktech.maven.publish.base")
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdk = 34
 
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -13,10 +13,8 @@ android {
   }
 
   defaultConfig {
-    minSdkVersion(14)
-    targetSdkVersion(30)
-    versionCode = 1
-    versionName = "1.0"
+    minSdk = 17
+    targetSdk = 34
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -27,6 +25,9 @@ android {
   testOptions {
     execution = "ANDROIDX_TEST_ORCHESTRATOR"
   }
+
+  namespace = "com.squareup.logcat"
+  testNamespace = "com.squareup.logcat.test"
 }
 
 dependencies {
