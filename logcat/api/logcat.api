@@ -22,6 +22,7 @@ public final class logcat/LogPriority : java/lang/Enum {
 	public static final field INFO Llogcat/LogPriority;
 	public static final field VERBOSE Llogcat/LogPriority;
 	public static final field WARN Llogcat/LogPriority;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getPriorityInt ()I
 	public static fun valueOf (Ljava/lang/String;)Llogcat/LogPriority;
 	public static fun values ()[Llogcat/LogPriority;

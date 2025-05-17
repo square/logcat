@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdk = 34
 
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -12,10 +12,13 @@ android {
   }
 
   defaultConfig {
-    minSdkVersion(21)
-    targetSdkVersion(30)
+    minSdk = 21
+    targetSdk = 34
     applicationId = "com.squareup.logcat.sample"
   }
+
+  namespace = "com.squareup.logcat.sample"
+  testNamespace = "com.squareup.logcat.sample.test"
 }
 
 dependencies {

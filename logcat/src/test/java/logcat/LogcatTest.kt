@@ -84,7 +84,7 @@ class LogcatTest {
     assertThat(logger.latestLog!!.message).contains(
       """
       |java.lang.RuntimeException: damn
-    	|	at logcat.LogcatTest.Throwable asLogMessage() has stacktrace logged(LogcatTest.kt:
+      |	at logcat.LogcatTest.Throwable asLogMessage() has stacktrace logged(LogcatTest.kt:
       """.trimMargin()
     )
   }
