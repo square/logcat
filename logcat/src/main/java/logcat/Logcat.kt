@@ -48,13 +48,12 @@ import logcat.LogPriority.DEBUG
  * ```
  *
  * To install a logger, see [LogcatLogger].
+ *
+ * @param tag If provided, the log will use this tag instead of the simple class name of `this` at
+ * the call site.
  */
 inline fun Any.logcat(
   priority: LogPriority = DEBUG,
-  /**
-   * If provided, the log will use this tag instead of the simple class name of `this` at the call
-   * site.
-   */
   tag: String? = null,
   crossinline message: () -> String
 ) {
