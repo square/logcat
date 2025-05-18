@@ -43,8 +43,10 @@ public abstract interface class logcat/LogcatLogger {
 }
 
 public final class logcat/LogcatLogger$Companion {
-	public final fun getLogger ()Llogcat/LogcatLogger;
-	public final fun install (Llogcat/LogcatLogger;)V
+	public final fun getLogExecutor ()Ljava/util/concurrent/Executor;
+	public final fun getLoggers ()Ljava/util/List;
+	public final fun install (Ljava/util/concurrent/Executor;)V
+	public static synthetic fun install$default (Llogcat/LogcatLogger$Companion;Ljava/util/concurrent/Executor;ILjava/lang/Object;)V
 	public final fun isInstalled ()Z
 	public final fun uninstall ()V
 }

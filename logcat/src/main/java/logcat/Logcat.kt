@@ -56,12 +56,17 @@ inline fun Any.logcat(
    * site.
    */
   tag: String? = null,
-  message: () -> String
+  crossinline message: () -> String
 ) {
-  LogcatLogger.logger.let { logger ->
-    if (logger.isLoggable(priority)) {
-      val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
-      logger.log(priority, tagOrCaller, message())
+  val logExecutor = LogcatLogger.logExecutor ?: return
+  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
+  if (loggers.isNotEmpty()) {
+    val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
+    logExecutor.execute {
+      val evaluatedMessage = message()
+      for (logger in loggers) {
+        logger.log(priority, tagOrCaller, evaluatedMessage)
+      }
     }
   }
 }
@@ -74,11 +79,16 @@ inline fun Any.logcat(
 inline fun logcat(
   tag: String,
   priority: LogPriority = DEBUG,
-  message: () -> String
+  crossinline message: () -> String
 ) {
-  with(LogcatLogger.logger) {
-    if (isLoggable(priority)) {
-      log(priority, tag, message())
+  val logExecutor = LogcatLogger.logExecutor ?: return
+  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
+  if (loggers.isNotEmpty()) {
+    logExecutor.execute {
+      val evaluatedMessage = message()
+      for (logger in loggers) {
+        logger.log(priority, tag, evaluatedMessage)
+      }
     }
   }
 }

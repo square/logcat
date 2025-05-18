@@ -1,7 +1,10 @@
 package logcat
 
-class TestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true }) : LogcatLogger {
-  override fun isLoggable(priority: LogPriority): Boolean = isLoggable.invoke(priority)
+class TestLogcatLogger : LogcatLogger {
+  override fun isLoggable(priority: LogPriority): Boolean {
+    latestPriority = priority
+    return shouldLog
+  }
 
   data class Log(
     val priority: LogPriority,
@@ -10,6 +13,8 @@ class TestLogcatLogger(private val isLoggable: (LogPriority) -> Boolean = { true
   )
 
   var latestLog: Log? = null
+  var latestPriority: LogPriority? = null
+  var shouldLog = true
 
   override fun log(
     priority: LogPriority,

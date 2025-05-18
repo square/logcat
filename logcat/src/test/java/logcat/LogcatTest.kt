@@ -2,14 +2,20 @@ package logcat
 
 import com.google.common.truth.Truth.assertThat
 import logcat.LogPriority.INFO
+import logcat.LogcatLogger.Companion.loggers
 import org.junit.After
 import org.junit.Test
 
 class LogcatTest {
 
+  private val logger = TestLogcatLogger().apply {
+    loggers += this
+  }
+
   @After
   fun tearDown() {
     LogcatLogger.uninstall()
+    loggers -= logger
   }
 
   @Test fun `when no logger set, calling logcat() does not crash`() {
@@ -25,7 +31,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() logs message from lambda`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     logcat { "Hi" }
 
@@ -33,7 +39,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() captures tag from outer context class name`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     logcat { "Hi" }
 
@@ -41,7 +47,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() tag overriding passes tag to logger`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     logcat(tag = "Bonjour") { "Hi" }
 
@@ -49,7 +55,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() passes priority to logger`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     logcat(INFO) { "Hi" }
 
@@ -57,17 +63,15 @@ class LogcatTest {
   }
 
   @Test fun `logcat() passes priority to isLoggable check`() {
-    var receivedPriority: LogPriority? = null
-    TestLogcatLogger(isLoggable = { receivedPriority = it; true })
-      .apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     logcat(INFO) { "Hi" }
 
-    assertThat(receivedPriority).isEqualTo(INFO)
+    assertThat(logger.latestPriority).isEqualTo(INFO)
   }
 
   @Test fun `when not loggable, the message lambda isn't invoked`() {
-    TestLogcatLogger(isLoggable = { false }).apply { LogcatLogger.install(this); latestLog = null }
+    logger.shouldLog = false
     var count = 0
 
     logcat { "Yo${++count}" }
@@ -76,7 +80,7 @@ class LogcatTest {
   }
 
   @Test fun `Throwable asLogMessage() has stacktrace logged`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
     val exception = RuntimeException("damn")
 
     logcat { exception.asLog() }
@@ -90,7 +94,7 @@ class LogcatTest {
   }
 
   @Test fun `standalone function can log with tag`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     standaloneFunctionLog(tag = "Bonjour", message = { "Hi" })
 
@@ -101,7 +105,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() captures outer this tag from lambda`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     val lambda = {
       logcat { "Hi" }
@@ -112,7 +116,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() captures outer this tag from nested lambda`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     val lambda = {
       val lambda = {
@@ -126,7 +130,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() captures outer this tag from anonymous object`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     val anonymousRunnable = object : Runnable {
       override fun run() {
@@ -139,7 +143,7 @@ class LogcatTest {
   }
 
   @Test fun `logcat() captures tag from companion function`() {
-    val logger = TestLogcatLogger().apply { LogcatLogger.install(this); latestLog = null }
+    LogcatLogger.install()
 
     companionFunctionLog { "Hi" }
 
