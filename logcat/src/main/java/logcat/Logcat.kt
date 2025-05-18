@@ -1,4 +1,4 @@
-@file:Suppress("NOTHING_TO_INLINE")
+@file:JvmName("Logcat")
 
 package logcat
 

@@ -76,6 +76,7 @@ class AndroidLogcatLogger(minPriority: LogPriority = DEBUG) : LogcatLogger {
   }
 
   companion object {
+    @JvmStatic
     fun installOnDebuggableApp(application: Application, minPriority: LogPriority = VERBOSE) {
       if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
         LogcatLogger.install()

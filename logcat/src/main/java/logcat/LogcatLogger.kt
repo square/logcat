@@ -29,6 +29,7 @@ interface LogcatLogger {
   )
 
   companion object {
+    @JvmStatic
     val loggers: MutableList<LogcatLogger> = CopyOnWriteArrayList()
 
     @Volatile
@@ -41,6 +42,7 @@ interface LogcatLogger {
 
     private val installLock = Any()
 
+    @JvmStatic
     val isInstalled: Boolean
       get() = installedThrowable != null
 
@@ -56,6 +58,7 @@ interface LogcatLogger {
      * It is an error to call [install] more than once without calling [uninstall] in between,
      * however doing this won't throw, it'll log an error to the newly provided logger.
      */
+    @JvmStatic
     fun install(logExecutor: Executor = Executor { it.run() }) {
       synchronized(installLock) {
         if (isInstalled) {
@@ -72,6 +75,7 @@ interface LogcatLogger {
     /**
      * Disables logging.
      */
+    @JvmStatic
     fun uninstall() {
       synchronized(installLock) {
         installedThrowable = null
