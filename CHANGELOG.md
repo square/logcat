@@ -15,7 +15,7 @@ are evaluated.
 override any app specific set up.
 * Changed the `minPriority` default parameter value of
 `AndroidLogcatLogger.installOnDebuggableApp()` from `DEBUG` to `VERBOSE`.
-
+* Added `@JvmStatic` and removed `Kt` from class name (`LogcatKt` => `Logcat`) so that APIs are more Java friendly (this remains primarily a Kotlin focused APIs but this change helps with codebases that still have some Java code hanging around).
 
 
 Version 0.1
