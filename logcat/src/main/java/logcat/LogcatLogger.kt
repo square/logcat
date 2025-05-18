@@ -1,8 +1,9 @@
 package logcat
 
-import logcat.LogPriority.ERROR
 import logcat.LogcatLogger.Companion.install
 import logcat.LogcatLogger.Companion.uninstall
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executor
 
 /**
  * Logger that [logcat] delegates to. Call [install] to install a new logger, the default is a
@@ -28,56 +29,53 @@ interface LogcatLogger {
   )
 
   companion object {
+    val loggers: MutableList<LogcatLogger> = CopyOnWriteArrayList()
+
     @Volatile
     @PublishedApi
-    internal var logger: LogcatLogger = NoLog
+    internal var logExecutor: Executor? = null
       private set
 
     @Volatile
     private var installedThrowable: Throwable? = null
 
+    private val installLock = Any()
+
     val isInstalled: Boolean
       get() = installedThrowable != null
 
     /**
-     * Installs a [LogcatLogger].
+     * Installs the Logcat library, enabling logging. Logs will not be
+     *
+     * Pass in an optional [logExecutor] to evaluate log messages on a different thread.
+     *
+     * Libraries should check [isInstalled] before calling this, to avoid overriding any app
+     * set [logExecutor].
      *
      * It is an error to call [install] more than once without calling [uninstall] in between,
      * however doing this won't throw, it'll log an error to the newly provided logger.
      */
-    fun install(logger: LogcatLogger) {
-      synchronized(this) {
+    fun install(logExecutor: Executor = Executor { it.run() }) {
+      synchronized(installLock) {
         if (isInstalled) {
-          logger.log(
-            ERROR,
-            "LogcatLogger",
-            "Installing $logger even though a logger was previously installed here: " +
+          println(
+            "Installing LogcatLogger even though it was previously installed here: " +
               installedThrowable!!.asLog()
           )
         }
-        installedThrowable = RuntimeException("Previous logger installed here")
-        Companion.logger = logger
+        installedThrowable = RuntimeException("LogcatLogger previously installed here")
+        Companion.logExecutor = logExecutor
       }
     }
 
     /**
-     * Replaces the current logger (if any) with a no-op logger.
+     * Disables logging.
      */
     fun uninstall() {
-      synchronized(this) {
+      synchronized(installLock) {
         installedThrowable = null
-        logger = NoLog
+        logExecutor = null
       }
     }
-  }
-
-  private object NoLog : LogcatLogger {
-    override fun isLoggable(priority: LogPriority) = false
-
-    override fun log(
-      priority: LogPriority,
-      tag: String,
-      message: String
-    ) = error("Should never receive any log")
   }
 }
