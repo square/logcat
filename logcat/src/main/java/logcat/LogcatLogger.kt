@@ -45,7 +45,8 @@ interface LogcatLogger {
       get() = installedThrowable != null
 
     /**
-     * Installs the Logcat library, enabling logging. Logs will not be
+     * Installs the Logcat library, enabling logging. Logs will not actually be evaluated
+     * until at least one logger is added to [loggers].
      *
      * Pass in an optional [logExecutor] to evaluate log messages on a different thread.
      *
