@@ -23,7 +23,7 @@ Add the `logcat` dependency to your library or app's `build.gradle` file:
 
 ```gradle
 dependencies {
-  implementation 'com.squareup.logcat:logcat:0.1'
+  implementation 'com.squareup.logcat:logcat:0.2.1'
 }
 ```
 
