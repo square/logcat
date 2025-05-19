@@ -82,5 +82,48 @@ interface LogcatLogger {
         logExecutor = null
       }
     }
+
+    @Deprecated(
+      "Maintains backward binary compat for libraries that depend on v0.1 with " +
+        "inline logcat {} calls"
+    )
+    @PublishedApi
+    internal val logger: LogcatLogger
+      get() {
+        // New instance per call so that "local" fields aren't retained.
+        return object : LogcatLogger {
+
+          private lateinit var localLoggers: List<LogcatLogger>
+          private var localLogExecutor: Executor? = null
+
+          override fun isLoggable(priority: LogPriority): Boolean {
+            localLogExecutor = logExecutor ?: return false
+            val filteredLoggers = loggers.filter { it.isLoggable(priority) }
+            localLoggers = filteredLoggers
+            return filteredLoggers.isNotEmpty()
+          }
+
+          override fun log(
+            priority: LogPriority,
+            tag: String,
+            message: String
+          ) {
+            localLogExecutor!!.execute {
+              for (logger in localLoggers) {
+                logger.log(priority, tag, message)
+              }
+            }
+          }
+        }
+      }
+
+    @Deprecated(
+      "LogcatLogger.install() does not take a LogcatLogger instance anymore",
+      ReplaceWith("install()")
+    )
+    fun install(logger: LogcatLogger) {
+      install()
+      loggers += logger
+    }
   }
 }
