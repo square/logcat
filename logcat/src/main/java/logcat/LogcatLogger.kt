@@ -34,7 +34,7 @@ interface LogcatLogger {
 
     @Volatile
     @PublishedApi
-    internal var logExecutor: Executor? = null
+    internal var  logExecutor: Executor? = null
       private set
 
     @Volatile
