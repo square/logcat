@@ -4,7 +4,7 @@ Change Log
 Version 0.2.2
 -------------
 
-_2025-05-27_
+_2025-06-04_
 
 * Multiple `LogcatLogger` instances can now be added to `LoggatLogger.loggers`.
 * Breaking change: `LogcatLogger.install()` does not take a `LogcatLogger` instance 
