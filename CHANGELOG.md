@@ -1,15 +1,14 @@
 Change Log
 ==========
 
-Version 0.2.2
+Version 0.2.3
 -------------
 
-_2025-06-04_
+_2025-06-05_
 
 * Multiple `LogcatLogger` instances can now be added to `LoggatLogger.loggers`.
 * Breaking change: `LogcatLogger.install()` does not take a `LogcatLogger` instance 
-anymore and instead takes an optional Executor to control the thread on which messages
-are evaluated.
+anymore.
 * Android libraries that want to use `logcat` should continue to use
 `AndroidLogcatLogger.installOnDebuggableApp()` which checks if already installed so as not to
 override any app specific set up.

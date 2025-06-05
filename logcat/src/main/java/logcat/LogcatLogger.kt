@@ -3,7 +3,6 @@ package logcat
 import logcat.LogcatLogger.Companion.install
 import logcat.LogcatLogger.Companion.uninstall
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.Executor
 
 /**
  * Logger that [logcat] delegates to. Call [install] to install a new logger, the default is a
@@ -33,11 +32,6 @@ interface LogcatLogger {
     val loggers: MutableList<LogcatLogger> = CopyOnWriteArrayList()
 
     @Volatile
-    @PublishedApi
-    internal var  logExecutor: Executor? = null
-      private set
-
-    @Volatile
     private var installedThrowable: Throwable? = null
 
     private val installLock = Any()
@@ -59,7 +53,7 @@ interface LogcatLogger {
      * however doing this won't throw, it'll log an error to the newly provided logger.
      */
     @JvmStatic
-    fun install(logExecutor: Executor = Executor { it.run() }) {
+    fun install() {
       synchronized(installLock) {
         if (isInstalled) {
           println(
@@ -68,7 +62,6 @@ interface LogcatLogger {
           )
         }
         installedThrowable = RuntimeException("LogcatLogger previously installed here")
-        Companion.logExecutor = logExecutor
       }
     }
 
@@ -79,7 +72,6 @@ interface LogcatLogger {
     fun uninstall() {
       synchronized(installLock) {
         installedThrowable = null
-        logExecutor = null
       }
     }
 
@@ -94,10 +86,11 @@ interface LogcatLogger {
         return object : LogcatLogger {
 
           private lateinit var localLoggers: List<LogcatLogger>
-          private var localLogExecutor: Executor? = null
 
           override fun isLoggable(priority: LogPriority): Boolean {
-            localLogExecutor = logExecutor ?: return false
+            if (!isInstalled) {
+              return false
+            }
             val filteredLoggers = loggers.filter { it.isLoggable(priority) }
             localLoggers = filteredLoggers
             return filteredLoggers.isNotEmpty()
@@ -108,10 +101,8 @@ interface LogcatLogger {
             tag: String,
             message: String
           ) {
-            localLogExecutor!!.execute {
-              for (logger in localLoggers) {
-                logger.log(priority, tag, message)
-              }
+            for (logger in localLoggers) {
+              logger.log(priority, tag, message)
             }
           }
         }

@@ -55,17 +55,17 @@ import logcat.LogPriority.DEBUG
 inline fun Any.logcat(
   priority: LogPriority = DEBUG,
   tag: String? = null,
-  crossinline message: () -> String
+  message: () -> String
 ) {
-  val logExecutor = LogcatLogger.logExecutor ?: return
+  if (!LogcatLogger.isInstalled) {
+    return
+  }
   val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   if (loggers.isNotEmpty()) {
     val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
-    logExecutor.execute {
-      val evaluatedMessage = message()
-      for (logger in loggers) {
-        logger.log(priority, tagOrCaller, evaluatedMessage)
-      }
+    val evaluatedMessage = message()
+    for (logger in loggers) {
+      logger.log(priority, tagOrCaller, evaluatedMessage)
     }
   }
 }
@@ -78,16 +78,16 @@ inline fun Any.logcat(
 inline fun logcat(
   tag: String,
   priority: LogPriority = DEBUG,
-  crossinline message: () -> String
+  message: () -> String
 ) {
-  val logExecutor = LogcatLogger.logExecutor ?: return
+  if (!LogcatLogger.isInstalled) {
+    return
+  }
   val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   if (loggers.isNotEmpty()) {
-    logExecutor.execute {
-      val evaluatedMessage = message()
-      for (logger in loggers) {
-        logger.log(priority, tag, evaluatedMessage)
-      }
+    val evaluatedMessage = message()
+    for (logger in loggers) {
+      logger.log(priority, tag, evaluatedMessage)
     }
   }
 }
