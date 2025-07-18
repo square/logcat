@@ -5,7 +5,7 @@ package logcat
 import logcat.LogPriority.DEBUG
 
 /**
- * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
+ * A tiny Kotlin API for cheap logging on top of platform-specific logging implementations.
  *
  * The [logcat] function has 3 parameters: an optional [priority], an optional [tag], and a required
  * string producing lambda ([message]). The lambda is only evaluated if a logger is installed and

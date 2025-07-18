@@ -2,8 +2,7 @@ package logcat
 
 /**
  * A [LogcatLogger] that always logs and delegates to [println] concatenating
- * the tag and message, separated by a space. Alternative to [AndroidLogcatLogger]
- * when running on a JVM.
+ * the tag and message, separated by a space. Use this logger when running on a JVM.
  */
 object PrintLogger : LogcatLogger {
 

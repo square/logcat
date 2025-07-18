@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+  api(project(":logcat-core"))
 
   compileOnly(Dependencies.Build.AndroidXAnnotation)
 

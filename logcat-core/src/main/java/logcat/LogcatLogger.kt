@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * Logger that [logcat] delegates to. Call [install] to install a new logger, the default is a
  * no-op logger. Calling [uninstall] falls back to the default no-op logger.
  *
- * You should install [AndroidLogcatLogger] on Android and [PrintLogger] on a JVM.
+ * You should install a platform-specific logger like PrintLogger on a JVM.
  */
 interface LogcatLogger {
 
@@ -44,10 +44,8 @@ interface LogcatLogger {
      * Installs the Logcat library, enabling logging. Logs will not actually be evaluated
      * until at least one logger is added to [loggers].
      *
-     * Pass in an optional [logExecutor] to evaluate log messages on a different thread.
-     *
      * Libraries should check [isInstalled] before calling this, to avoid overriding any app
-     * set [logExecutor].
+     * set configuration.
      *
      * It is an error to call [install] more than once without calling [uninstall] in between,
      * however doing this won't throw, it'll log an error to the newly provided logger.

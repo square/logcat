@@ -1,6 +1,7 @@
 rootProject.name = "logcat"
 
 include(
-    ":logcat",
+    ":logcat-core",
+    ":logcat-android",
     ":sample"
 )

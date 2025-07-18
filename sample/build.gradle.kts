@@ -22,6 +22,6 @@ android {
 }
 
 dependencies {
-  implementation(project(":logcat"))
+  implementation(project(":logcat-android"))
   implementation(Dependencies.AppCompat)
 }
