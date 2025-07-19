@@ -27,5 +27,6 @@ android {
 
 dependencies {
   implementation(project(":logcat"))
+  implementation(project(":sample-jvm"))
   implementation(libs.appcompat)
 }

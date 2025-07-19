@@ -3,6 +3,7 @@ package com.squareup.logcat.sample
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.logcat.sample.jvm.HelloJvm
 import logcat.LogPriority.INFO
 import logcat.asLog
 import logcat.logcat
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.main)
 
     logcat { "Created" }
+
+    HelloJvm.logHello()
 
     logcat(INFO) { "I like turtles" }
 
