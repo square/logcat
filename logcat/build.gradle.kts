@@ -1,11 +1,48 @@
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.binary.compatibility.validator)
+  alias(libs.plugins.dokka)
+}
+
+kotlin {
+  androidTarget {
+    publishLibraryVariants("release")
+    java {
+      compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
+      }
+    }
+  }
+  jvm {
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_1_8)
+    }
+  }
+
+  sourceSets {
+    val commonMain by getting {
+      dependencies {
+        implementation(libs.kotlin.stdlib)
+      }
+    }
+    
+    val commonTest by getting {
+      dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.truthish)
+      }
+    }
+    
+    val androidMain by getting
+    val jvmMain by getting
+  }
 }
 
 android {
@@ -16,13 +53,8 @@ android {
     targetCompatibility = JavaVersion.VERSION_1_8
   }
 
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-
   defaultConfig {
     minSdk = 17
-    targetSdk = 36
   }
 
   buildFeatures {
@@ -33,19 +65,12 @@ android {
   testNamespace = "com.squareup.logcat.test"
 }
 
-dependencies {
-  implementation(libs.kotlin.stdlib)
-
-  testImplementation(libs.junit)
-  testImplementation(libs.truth)
-}
-
 mavenPublishing {
   publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
   signAllPublications()
   pomFromGradleProperties()
 
   configure(
-    AndroidSingleVariantLibrary(variant = "release", sourcesJar = true, publishJavadocJar = true),
+    KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaHtml")),
   )
 }

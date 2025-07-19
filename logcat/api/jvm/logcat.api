@@ -1,0 +1,57 @@
+public final class logcat/LogPriority : java/lang/Enum {
+	public static final field ASSERT Llogcat/LogPriority;
+	public static final field DEBUG Llogcat/LogPriority;
+	public static final field ERROR Llogcat/LogPriority;
+	public static final field INFO Llogcat/LogPriority;
+	public static final field VERBOSE Llogcat/LogPriority;
+	public static final field WARN Llogcat/LogPriority;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getPriorityInt ()I
+	public static fun valueOf (Ljava/lang/String;)Llogcat/LogPriority;
+	public static fun values ()[Llogcat/LogPriority;
+}
+
+public final class logcat/Logcat {
+	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static synthetic fun logcat$default (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+}
+
+public final class logcat/LogcatKt {
+	public static final fun outerClassSimpleNameInternalOnlyDoNotUseKThxBye (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public abstract interface class logcat/LogcatLogger {
+	public static final field Companion Llogcat/LogcatLogger$Companion;
+	public static fun getLoggers ()Ljava/util/List;
+	public static fun install ()V
+	public static fun isInstalled ()Z
+	public fun isLoggable (Llogcat/LogPriority;)Z
+	public abstract fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
+	public static fun uninstall ()V
+}
+
+public final class logcat/LogcatLogger$Companion {
+	public final fun getLogger ()Llogcat/LogcatLogger;
+	public final fun getLoggers ()Ljava/util/List;
+	public final fun install ()V
+	public final fun install (Llogcat/LogcatLogger;)V
+	public final fun isInstalled ()Z
+	public final fun uninstall ()V
+}
+
+public final class logcat/LogcatLogger$DefaultImpls {
+	public static fun isLoggable (Llogcat/LogcatLogger;Llogcat/LogPriority;)Z
+}
+
+public final class logcat/PrintLogger : logcat/LogcatLogger {
+	public static final field INSTANCE Llogcat/PrintLogger;
+	public fun isLoggable (Llogcat/LogPriority;)Z
+	public fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class logcat/ThrowablesKt {
+	public static final fun asLog (Ljava/lang/Throwable;)Ljava/lang/String;
+}
+

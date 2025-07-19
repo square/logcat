@@ -4,20 +4,22 @@ androidGradlePlugin = "8.11.1"
 mavenPublish = "0.25.3"
 ktlint = "13.0.0"
 binaryCompatibility = "0.18.1"
-junit = "4.13.2"
-truth = "1.4.4"
+truthish = "1.0.3"
 appcompat = "1.7.1"
+dokka = "1.9.10"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-junit = { module = "junit:junit", version.ref = "junit" }
-truth = { module = "com.google.truth:truth", version.ref = "truth" }
+truthish = { module = "com.varabyte.truthish:truthish", version.ref = "truthish" }
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 maven-publish = { id = "com.vanniktech.maven.publish.base", version.ref = "mavenPublish" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibility" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
