@@ -1,7 +1,11 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
-  id("com.android.library")
-  kotlin("android")
-  id("com.vanniktech.maven.publish.base")
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.maven.publish)
+  alias(libs.plugins.binary.compatibility.validator)
 }
 
 android {
@@ -12,18 +16,17 @@ android {
     targetCompatibility = JavaVersion.VERSION_1_8
   }
 
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+
   defaultConfig {
     minSdk = 17
     targetSdk = 34
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildFeatures {
     buildConfig = false
-  }
-
-  testOptions {
-    execution = "ANDROIDX_TEST_ORCHESTRATOR"
   }
 
   namespace = "com.squareup.logcat"
@@ -31,22 +34,20 @@ android {
 }
 
 dependencies {
+  implementation(libs.kotlin.stdlib)
 
-  compileOnly(Dependencies.Build.AndroidXAnnotation)
+  testImplementation(libs.junit)
+  testImplementation(libs.mockito.core)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.truth)
+}
 
-  testImplementation(Dependencies.JUnit)
-  testImplementation(Dependencies.Mockito)
-  testImplementation(Dependencies.Robolectric)
-  testImplementation(Dependencies.Truth)
+mavenPublishing {
+  publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
+  signAllPublications()
+  pomFromGradleProperties()
 
-  androidTestImplementation(Dependencies.InstrumentationTests.Core)
-  androidTestImplementation(Dependencies.InstrumentationTests.Espresso)
-  androidTestImplementation(Dependencies.InstrumentationTests.JUnit)
-  androidTestImplementation(Dependencies.InstrumentationTests.Rules)
-  androidTestImplementation(Dependencies.InstrumentationTests.Runner)
-  androidTestImplementation(Dependencies.InstrumentationTests.UiAutomator)
-  androidTestImplementation(Dependencies.Truth)
-  androidTestImplementation(Dependencies.AppCompat)
-
-  androidTestUtil(Dependencies.InstrumentationTests.Orchestrator)
+  configure(
+    AndroidSingleVariantLibrary(variant = "release", sourcesJar = true, publishJavadocJar = true),
+  )
 }
