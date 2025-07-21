@@ -1,11 +1,52 @@
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-  id("com.android.library")
-  kotlin("android")
-  id("com.vanniktech.maven.publish.base")
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.maven.publish)
+  alias(libs.plugins.binary.compatibility.validator)
+  alias(libs.plugins.dokka)
+}
+
+kotlin {
+  androidTarget {
+    publishLibraryVariants("release")
+    java {
+      compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
+      }
+    }
+  }
+  jvm {
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_1_8)
+    }
+  }
+
+  sourceSets {
+    val commonMain by getting {
+      dependencies {
+        implementation(libs.kotlin.stdlib)
+      }
+    }
+    
+    val commonTest by getting {
+      dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.truthish)
+      }
+    }
+    
+    val androidMain by getting
+    val jvmMain by getting
+  }
 }
 
 android {
-  compileSdk = 34
+  compileSdk = 36
 
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -14,39 +55,22 @@ android {
 
   defaultConfig {
     minSdk = 17
-    targetSdk = 34
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildFeatures {
     buildConfig = false
   }
 
-  testOptions {
-    execution = "ANDROIDX_TEST_ORCHESTRATOR"
-  }
-
   namespace = "com.squareup.logcat"
   testNamespace = "com.squareup.logcat.test"
 }
 
-dependencies {
+mavenPublishing {
+  publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
+  signAllPublications()
+  pomFromGradleProperties()
 
-  compileOnly(Dependencies.Build.AndroidXAnnotation)
-
-  testImplementation(Dependencies.JUnit)
-  testImplementation(Dependencies.Mockito)
-  testImplementation(Dependencies.Robolectric)
-  testImplementation(Dependencies.Truth)
-
-  androidTestImplementation(Dependencies.InstrumentationTests.Core)
-  androidTestImplementation(Dependencies.InstrumentationTests.Espresso)
-  androidTestImplementation(Dependencies.InstrumentationTests.JUnit)
-  androidTestImplementation(Dependencies.InstrumentationTests.Rules)
-  androidTestImplementation(Dependencies.InstrumentationTests.Runner)
-  androidTestImplementation(Dependencies.InstrumentationTests.UiAutomator)
-  androidTestImplementation(Dependencies.Truth)
-  androidTestImplementation(Dependencies.AppCompat)
-
-  androidTestUtil(Dependencies.InstrumentationTests.Orchestrator)
+  configure(
+    KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaHtml")),
+  )
 }

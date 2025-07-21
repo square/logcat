@@ -1,10 +1,10 @@
 package logcat
 
-import com.google.common.truth.Truth.assertThat
+import com.varabyte.truthish.assertThat
 import logcat.LogPriority.INFO
 import logcat.LogcatLogger.Companion.loggers
-import org.junit.After
-import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.Test
 
 class LogcatTest {
 
@@ -12,7 +12,7 @@ class LogcatTest {
     loggers += this
   }
 
-  @After
+  @AfterTest
   fun tearDown() {
     LogcatLogger.uninstall()
     loggers -= logger
@@ -26,7 +26,6 @@ class LogcatTest {
     var count = 0
 
     logcat { "Yo${++count}" }
-
     assertThat(count).isEqualTo(0)
   }
 
