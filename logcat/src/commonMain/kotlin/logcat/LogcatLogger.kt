@@ -1,8 +1,12 @@
 package logcat
 
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
 import logcat.LogcatLogger.Companion.install
 import logcat.LogcatLogger.Companion.uninstall
-import java.util.concurrent.CopyOnWriteArrayList
+import logcat.internal.copyOnWriteArrayList
+import kotlin.concurrent.Volatile
+import kotlin.jvm.JvmStatic
 
 /**
  * Logger that [logcat] delegates to. Call [install] to enable logging, then add a [LogcatLogger]
@@ -32,16 +36,16 @@ interface LogcatLogger {
   companion object {
     /** @see LogcatLogger */
     @JvmStatic
-    val loggers: MutableList<LogcatLogger> = CopyOnWriteArrayList()
+    val loggers: MutableList<LogcatLogger> = copyOnWriteArrayList()
 
     /** @see LogcatObserver */
     @JvmStatic
-    val observers: MutableList<LogcatObserver> = CopyOnWriteArrayList()
+    val observers: MutableList<LogcatObserver> = copyOnWriteArrayList()
 
     @Volatile
     private var installedThrowable: Throwable? = null
 
-    private val installLock = Any()
+    private val installLock = SynchronizedObject()
 
     @JvmStatic
     val isInstalled: Boolean

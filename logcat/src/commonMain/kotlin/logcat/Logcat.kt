@@ -3,7 +3,8 @@
 package logcat
 
 import logcat.LogPriority.DEBUG
-import java.util.concurrent.CopyOnWriteArrayList
+import logcat.internal.copyOnWriteArrayList
+import kotlin.jvm.JvmName
 
 /**
  * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
@@ -65,7 +66,7 @@ inline fun Any.logcat(
   if (loggers.isNotEmpty()) {
     val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
     // Ensures beforeLog() and afterLog() are called on the same observers. Backing array reused.
-    val observersSnapshot = CopyOnWriteArrayList(LogcatLogger.observers)
+    val observersSnapshot = copyOnWriteArrayList(LogcatLogger.observers)
     for (observer in observersSnapshot) {
       observer.beforeLog(priority, tagOrCaller)
     }
@@ -95,7 +96,7 @@ inline fun logcat(
   val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   if (loggers.isNotEmpty()) {
     // Ensures beforeLog() and afterLog() are called on the same observers. Backing array reused.
-    val observersSnapshot = CopyOnWriteArrayList(LogcatLogger.observers)
+    val observersSnapshot = copyOnWriteArrayList(LogcatLogger.observers)
     for (observer in observersSnapshot) {
       observer.beforeLog(priority, tag)
     }

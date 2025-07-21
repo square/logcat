@@ -1,11 +1,13 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.library)
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.binary.compatibility.validator)
   alias(libs.plugins.dokka)
@@ -26,22 +28,38 @@ kotlin {
     }
   }
 
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
+  }
+
   sourceSets {
-    val commonMain by getting {
+    applyDefaultHierarchyTemplate()
+
+    commonMain {
       dependencies {
         implementation(libs.kotlin.stdlib)
+        implementation(libs.kotlinx.atomicfu)
       }
     }
-    
-    val commonTest by getting {
+
+    commonTest {
       dependencies {
         implementation(libs.kotlin.test)
         implementation(libs.truthish)
       }
     }
-    
-    val androidMain by getting
-    val jvmMain by getting
+
+    androidMain {
+      dependencies {
+        implementation(project(":jvm-utils"))
+      }
+    }
+
+    jvmMain {
+      dependencies {
+        implementation(project(":jvm-utils"))
+      }
+    }
   }
 }
 
