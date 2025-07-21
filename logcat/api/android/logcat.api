@@ -42,7 +42,7 @@ public abstract interface class logcat/LogcatLogger {
 	public static fun getLoggers ()Ljava/util/List;
 	public static fun install ()V
 	public static fun isInstalled ()Z
-	public fun isLoggable (Llogcat/LogPriority;)Z
+	public abstract fun isLoggable (Llogcat/LogPriority;)Z
 	public abstract fun log (Llogcat/LogPriority;Ljava/lang/String;Ljava/lang/String;)V
 	public static fun uninstall ()V
 }
