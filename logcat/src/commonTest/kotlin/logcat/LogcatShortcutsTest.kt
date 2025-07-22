@@ -55,8 +55,8 @@ class LogcatObjectTest {
     logcat.w(tag = null) { "warning" }
     logger.assertLatest(priority = WARN, tag = "LogcatObjectTest", message = "warning")
 
-    logcat.assert { "assert" }
-    logger.assertLatest(priority = ASSERT, tag = "LogcatObjectTest", message = "assert")
+    logcat.wtf { "PANIC" }
+    logger.assertLatest(priority = ASSERT, tag = "LogcatObjectTest", message = "PANIC")
   }
 
   @Test

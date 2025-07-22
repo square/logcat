@@ -72,8 +72,6 @@ public final class logcat/ThrowablesKt {
 
 public final class logcat/logcat {
 	public static final field INSTANCE Llogcat/logcat;
-	public final fun assert (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public static synthetic fun assert$default (Llogcat/logcat;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun d (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun d$default (Llogcat/logcat;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun e (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
@@ -84,5 +82,7 @@ public final class logcat/logcat {
 	public static synthetic fun v$default (Llogcat/logcat;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun w (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun w$default (Llogcat/logcat;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public final fun wtf (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun wtf$default (Llogcat/logcat;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 }
 

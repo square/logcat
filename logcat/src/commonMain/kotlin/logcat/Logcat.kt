@@ -154,7 +154,7 @@ object logcat {
   ) = subject.logcat(LogPriority.ERROR, tag, message)
 
   context(subject: Any)
-  fun assert(
+  fun wtf(
     tag: String? = null,
     message: () -> String
   ) = subject.logcat(LogPriority.ASSERT, tag, message)
