@@ -1,8 +1,10 @@
 @file:Suppress("UnstableApiUsage")
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -33,7 +35,16 @@ kotlin {
   }
 
   sourceSets {
-    applyDefaultHierarchyTemplate()
+    applyDefaultHierarchyTemplate {
+      common {
+        withCompilations { true }
+
+        group("jvmCommon") {
+          withAndroidTarget()
+          withJvm()
+        }
+      }
+    }
 
     commonMain {
       dependencies {
@@ -46,18 +57,6 @@ kotlin {
       dependencies {
         implementation(libs.kotlin.test)
         implementation(libs.truthish)
-      }
-    }
-
-    androidMain {
-      dependencies {
-        implementation(project(":jvm-utils"))
-      }
-    }
-
-    jvmMain {
-      dependencies {
-        implementation(project(":jvm-utils"))
       }
     }
   }

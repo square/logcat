@@ -1,6 +1,5 @@
 package logcat.internal
 
-@PublishedApi
 internal expect fun <T> copyOnWriteArrayList(): MutableList<T>
 
 @PublishedApi
