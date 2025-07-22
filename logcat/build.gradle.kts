@@ -26,20 +26,24 @@ kotlin {
     }
   }
 
+  compilerOptions {
+    freeCompilerArgs.add("-Xcontext-parameters")
+  }
+
   sourceSets {
     val commonMain by getting {
       dependencies {
         implementation(libs.kotlin.stdlib)
       }
     }
-    
+
     val commonTest by getting {
       dependencies {
         implementation(libs.kotlin.test)
         implementation(libs.truthish)
       }
     }
-    
+
     val androidMain by getting
     val jvmMain by getting
   }

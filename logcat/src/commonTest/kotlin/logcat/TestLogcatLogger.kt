@@ -1,5 +1,7 @@
 package logcat
 
+import kotlin.test.assertEquals
+
 class TestLogcatLogger : LogcatLogger {
   override fun isLoggable(priority: LogPriority): Boolean {
     latestPriority = priority
@@ -23,4 +25,13 @@ class TestLogcatLogger : LogcatLogger {
   ) {
     latestLog = Log(priority, tag, message)
   }
+
+  fun assertLatest(
+    priority: LogPriority,
+    tag: String,
+    message: String
+  ) = assertEquals(
+    expected = Log(priority, tag, message),
+    actual = latestLog
+  )
 }

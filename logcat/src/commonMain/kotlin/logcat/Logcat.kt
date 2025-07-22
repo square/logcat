@@ -91,3 +91,71 @@ inline fun logcat(
     }
   }
 }
+
+/**
+ * An alternative way of calling the free [logcat] method using a Timber-like API.
+ *
+ * Use like:
+ *
+ * ```kotlin
+ * import logcat.logcat
+ *
+ * class MouseController {
+ *
+ *   fun play {
+ *     var state = "CHEEZBURGER"
+ *     logcat.d { "I CAN HAZ $state?" }
+ *     // logcat output: D/MouseController: I CAN HAZ CHEEZBURGER?
+ *
+ *     logcat.i { "DID U ASK 4 MOAR INFO?" }
+ *     // logcat output: I/MouseController: DID U ASK 4 MOAR INFO?
+ *
+ *     logcat.w { exception.asLog() }
+ *     // logcat output: W/MouseController: java.lang.RuntimeException: FYLEZ KERUPTED
+ *     //                        at sample.MouseController.play(MouseController.kt:22)
+ *     //                        ...
+ *
+ *     logcat.e("Lolcat") { "OH HI" }
+ *     // logcat output: E/Lolcat: OH HI
+ *   }
+ * }
+ * ```
+ */
+@Suppress("ClassName")
+object logcat {
+  context(subject: Any)
+  fun v(
+    tag: String? = null,
+    message: () -> String
+  ) = subject.logcat(LogPriority.VERBOSE, tag, message)
+
+  context(subject: Any)
+  fun d(
+    tag: String? = null,
+    message: () -> String
+  ) = subject.logcat(DEBUG, tag, message)
+
+  context(subject: Any)
+  fun i(
+    tag: String? = null,
+    message: () -> String
+  ) = subject.logcat(LogPriority.INFO, tag, message)
+
+  context(subject: Any)
+  fun w(
+    tag: String? = null,
+    message: () -> String
+  ) = subject.logcat(LogPriority.WARN, tag, message)
+
+  context(subject: Any)
+  fun e(
+    tag: String? = null,
+    message: () -> String
+  ) = subject.logcat(LogPriority.ERROR, tag, message)
+
+  context(subject: Any)
+  fun assert(
+    tag: String? = null,
+    message: () -> String
+  ) = subject.logcat(LogPriority.ASSERT, tag, message)
+}
