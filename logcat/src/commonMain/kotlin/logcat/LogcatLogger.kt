@@ -5,10 +5,12 @@ import logcat.LogcatLogger.Companion.uninstall
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
- * Logger that [logcat] delegates to. Call [install] to install a new logger, the default is a
- * no-op logger. Calling [uninstall] falls back to the default no-op logger.
+ * Logger that [logcat] delegates to. Call [install] to enable logging, then add a [LogcatLogger]
+ * instance to [LogcatLogger.loggers].
  *
  * You should install [AndroidLogcatLogger] on Android and [PrintLogger] on a JVM.
+ *
+ * You can get a good default by using [AndroidLogcatLogger.installOnDebuggableApp]
  */
 interface LogcatLogger {
 
@@ -28,8 +30,13 @@ interface LogcatLogger {
   )
 
   companion object {
+    /** @see LogcatLogger */
     @JvmStatic
     val loggers: MutableList<LogcatLogger> = CopyOnWriteArrayList()
+
+    /** @see LogcatObserver */
+    @JvmStatic
+    val observers: MutableList<LogcatObserver> = CopyOnWriteArrayList()
 
     @Volatile
     private var installedThrowable: Throwable? = null

@@ -40,6 +40,7 @@ public final class logcat/LogcatKt {
 public abstract interface class logcat/LogcatLogger {
 	public static final field Companion Llogcat/LogcatLogger$Companion;
 	public static fun getLoggers ()Ljava/util/List;
+	public static fun getObservers ()Ljava/util/List;
 	public static fun install ()V
 	public static fun isInstalled ()Z
 	public abstract fun isLoggable (Llogcat/LogPriority;)Z
@@ -50,6 +51,7 @@ public abstract interface class logcat/LogcatLogger {
 public final class logcat/LogcatLogger$Companion {
 	public final fun getLogger ()Llogcat/LogcatLogger;
 	public final fun getLoggers ()Ljava/util/List;
+	public final fun getObservers ()Ljava/util/List;
 	public final fun install ()V
 	public final fun install (Llogcat/LogcatLogger;)V
 	public final fun isInstalled ()Z
@@ -58,6 +60,11 @@ public final class logcat/LogcatLogger$Companion {
 
 public final class logcat/LogcatLogger$DefaultImpls {
 	public static fun isLoggable (Llogcat/LogcatLogger;Llogcat/LogPriority;)Z
+}
+
+public abstract interface class logcat/LogcatObserver {
+	public abstract fun afterLog (Llogcat/LogPriority;Ljava/lang/String;)V
+	public abstract fun beforeLog (Llogcat/LogPriority;Ljava/lang/String;)V
 }
 
 public final class logcat/PrintLogger : logcat/LogcatLogger {
