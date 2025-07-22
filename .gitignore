@@ -29,6 +29,7 @@ hs_err_pid*
 # Gradle
 out/
 .gradle/
+.kotlin/
 build/
 local.properties
 .gradletasknamecache
