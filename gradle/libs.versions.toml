@@ -1,5 +1,6 @@
 [versions]
 kotlin = "2.1.21"
+kotlinx-atomicfu = "0.29.0"
 androidGradlePlugin = "8.11.1"
 mavenPublish = "0.25.3"
 ktlint = "13.0.0"
@@ -11,6 +12,7 @@ dokka = "1.9.10"
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "kotlinx-atomicfu" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 truthish = { module = "com.varabyte.truthish:truthish", version.ref = "truthish" }
 

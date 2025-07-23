@@ -1,3 +1,6 @@
+public abstract interface annotation class logcat/InternalLogcatApi : java/lang/annotation/Annotation {
+}
+
 public final class logcat/LogPriority : java/lang/Enum {
 	public static final field ASSERT Llogcat/LogPriority;
 	public static final field DEBUG Llogcat/LogPriority;
@@ -16,10 +19,6 @@ public final class logcat/Logcat {
 	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public static synthetic fun logcat$default (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
-}
-
-public final class logcat/LogcatKt {
-	public static final fun outerClassSimpleNameInternalOnlyDoNotUseKThxBye (Ljava/lang/Object;)Ljava/lang/String;
 }
 
 public abstract interface class logcat/LogcatLogger {
@@ -60,5 +59,10 @@ public final class logcat/PrintLogger : logcat/LogcatLogger {
 
 public final class logcat/ThrowablesKt {
 	public static final fun asLog (Ljava/lang/Throwable;)Ljava/lang/String;
+}
+
+public final class logcat/internal/Utils_jvmCommonKt {
+	public static final fun copyOnWriteArrayList (Ljava/util/List;)Ljava/util/List;
+	public static final fun outerClassSimpleName (Ljava/lang/Object;)Ljava/lang/String;
 }
 

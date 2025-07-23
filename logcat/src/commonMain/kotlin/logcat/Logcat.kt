@@ -3,7 +3,9 @@
 package logcat
 
 import logcat.LogPriority.DEBUG
-import java.util.concurrent.CopyOnWriteArrayList
+import logcat.internal.copyOnWriteArrayList
+import logcat.internal.outerClassSimpleName
+import kotlin.jvm.JvmName
 
 /**
  * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
@@ -53,6 +55,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * @param tag If provided, the log will use this [tag] instead of the simple class name of [this] at
  * the call site.
  */
+@OptIn(InternalLogcatApi::class)
 inline fun Any.logcat(
   priority: LogPriority = DEBUG,
   tag: String? = null,
@@ -63,9 +66,9 @@ inline fun Any.logcat(
   }
   val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   if (loggers.isNotEmpty()) {
-    val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
+    val tagOrCaller = tag ?: outerClassSimpleName()
     // Ensures beforeLog() and afterLog() are called on the same observers. Backing array reused.
-    val observersSnapshot = CopyOnWriteArrayList(LogcatLogger.observers)
+    val observersSnapshot = copyOnWriteArrayList(LogcatLogger.observers)
     for (observer in observersSnapshot) {
       observer.beforeLog(priority, tagOrCaller)
     }
@@ -84,6 +87,7 @@ inline fun Any.logcat(
  * be used in standalone functions where there is no `this`.
  * @see logcat above
  */
+@OptIn(InternalLogcatApi::class)
 inline fun logcat(
   tag: String,
   priority: LogPriority = DEBUG,
@@ -95,7 +99,7 @@ inline fun logcat(
   val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   if (loggers.isNotEmpty()) {
     // Ensures beforeLog() and afterLog() are called on the same observers. Backing array reused.
-    val observersSnapshot = CopyOnWriteArrayList(LogcatLogger.observers)
+    val observersSnapshot = copyOnWriteArrayList(LogcatLogger.observers)
     for (observer in observersSnapshot) {
       observer.beforeLog(priority, tag)
     }

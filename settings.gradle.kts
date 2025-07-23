@@ -17,7 +17,7 @@ dependencyResolutionManagement {
 }
 
 include(
-    ":logcat",
-    ":sample",
-    ":sample-jvm"
+  ":logcat",
+  ":sample",
+  ":sample-jvm"
 )
