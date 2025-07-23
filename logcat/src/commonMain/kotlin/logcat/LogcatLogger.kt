@@ -35,10 +35,12 @@ interface LogcatLogger {
 
   companion object {
     /** @see LogcatLogger */
+    @OptIn(InternalLogcatApi::class)
     @JvmStatic
     val loggers: MutableList<LogcatLogger> = copyOnWriteArrayList()
 
     /** @see LogcatObserver */
+    @OptIn(InternalLogcatApi::class)
     @JvmStatic
     val observers: MutableList<LogcatObserver> = copyOnWriteArrayList()
 
