@@ -4,12 +4,12 @@ import logcat.InternalLogcatApi
 import java.util.concurrent.CopyOnWriteArrayList
 
 @InternalLogcatApi
-internal actual fun <T> copyOnWriteArrayList(): MutableList<T> = CopyOnWriteArrayList()
+internal actual fun <T> threadSafeList(): MutableList<T> = CopyOnWriteArrayList()
 
 @InternalLogcatApi
 @PublishedApi
-internal actual fun <T> copyOnWriteArrayList(items: MutableList<T>): MutableList<T> =
-  CopyOnWriteArrayList(items)
+internal actual fun <T> MutableList<T>.threadSafeListSnapshot(): MutableList<T> =
+  CopyOnWriteArrayList(this)
 
 @InternalLogcatApi
 @PublishedApi
