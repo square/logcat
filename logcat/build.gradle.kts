@@ -3,7 +3,6 @@
 
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -83,7 +82,7 @@ android {
 }
 
 mavenPublishing {
-  publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
+  publishToMavenCentral(automaticRelease = true)
   signAllPublications()
   pomFromGradleProperties()
 

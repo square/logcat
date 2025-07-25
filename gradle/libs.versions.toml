@@ -2,7 +2,7 @@
 kotlin = "2.1.21"
 kotlinx-atomicfu = "0.29.0"
 androidGradlePlugin = "8.11.1"
-mavenPublish = "0.25.3"
+mavenPublish = "0.34.0"
 ktlint = "13.0.0"
 binaryCompatibility = "0.18.1"
 truthish = "1.0.3"
