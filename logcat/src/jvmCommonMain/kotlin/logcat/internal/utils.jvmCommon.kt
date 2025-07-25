@@ -8,11 +8,6 @@ internal actual fun <T> threadSafeList(): MutableList<T> = CopyOnWriteArrayList(
 
 @InternalLogcatApi
 @PublishedApi
-internal actual fun <T> MutableList<T>.threadSafeListSnapshot(): MutableList<T> =
-  CopyOnWriteArrayList(this)
-
-@InternalLogcatApi
-@PublishedApi
 internal actual fun Any.outerClassSimpleName(): String {
   val javaClass = this::class.java
   val fullClassName = javaClass.name
