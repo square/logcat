@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version NEXT
+-------------
+
+_20XX-XX-XX_
+
+* Project restructured to support KMP
+* New API: `Logcat.observer` which allows tracing / measuring how long logging takes.
+
 Version 0.2.3
 -------------
 
