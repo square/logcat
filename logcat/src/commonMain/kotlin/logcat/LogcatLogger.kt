@@ -41,9 +41,8 @@ interface LogcatLogger {
 
     /** @see LogcatObserver */
     @JvmStatic
-    val observers: MutableList<LogcatObserver> =
-      @OptIn(InternalLogcatApi::class)
-      threadSafeList()
+    @Volatile
+    var observer: LogcatObserver? = null
 
     @Volatile
     private var installedThrowable: Throwable? = null

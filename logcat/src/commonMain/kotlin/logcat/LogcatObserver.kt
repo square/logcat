@@ -3,7 +3,7 @@ package logcat
 /**
  * Called by [logcat]. [beforeLog] is called before evaluating the message lambda,
  * and [afterLog] is called after all [LogcatLogger.loggers] have received the message.
- * Add implementations to [LogcatLogger.observers].
+ * Set implementation on [LogcatLogger.observer].
  */
 interface LogcatObserver {
 

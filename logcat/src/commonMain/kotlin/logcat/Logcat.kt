@@ -4,7 +4,6 @@ package logcat
 
 import logcat.LogPriority.DEBUG
 import logcat.internal.outerClassSimpleName
-import logcat.internal.threadSafeListSnapshot
 
 /**
  * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
@@ -66,18 +65,13 @@ inline fun Any.logcat(
   @OptIn(InternalLogcatApi::class)
   if (loggers.isNotEmpty()) {
     val tagOrCaller = tag ?: outerClassSimpleName()
-    // Ensures beforeLog() and afterLog() are called on the same observers. Backing array reused.
-    val observersSnapshot = LogcatLogger.observers.threadSafeListSnapshot()
-    for (observer in observersSnapshot) {
-      observer.beforeLog(priority, tagOrCaller)
-    }
+    val observer = LogcatLogger.observer
+    observer?.beforeLog(priority, tagOrCaller)
     val evaluatedMessage = message()
     for (logger in loggers) {
       logger.log(priority, tagOrCaller, evaluatedMessage)
     }
-    for (observer in observersSnapshot) {
-      observer.afterLog(priority, tagOrCaller)
-    }
+    observer?.afterLog(priority, tagOrCaller)
   }
 }
 
@@ -96,18 +90,12 @@ inline fun logcat(
   }
   val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   if (loggers.isNotEmpty()) {
-    @OptIn(InternalLogcatApi::class)
-    // Ensures beforeLog() and afterLog() are called on the same observers. Backing array reused.
-    val observersSnapshot = LogcatLogger.observers.threadSafeListSnapshot()
-    for (observer in observersSnapshot) {
-      observer.beforeLog(priority, tag)
-    }
+    val observer = LogcatLogger.observer
+    observer?.beforeLog(priority, tag)
     val evaluatedMessage = message()
     for (logger in loggers) {
       logger.log(priority, tag, evaluatedMessage)
     }
-    for (observer in observersSnapshot) {
-      observer.afterLog(priority, tag)
-    }
+    observer?.afterLog(priority, tag)
   }
 }
