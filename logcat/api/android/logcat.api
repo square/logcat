@@ -81,7 +81,7 @@ public final class logcat/ThrowablesKt {
 }
 
 public final class logcat/internal/Utils_jvmCommonKt {
-	public static final fun copyOnWriteArrayList (Ljava/util/List;)Ljava/util/List;
 	public static final fun outerClassSimpleName (Ljava/lang/Object;)Ljava/lang/String;
+	public static final fun threadSafeListSnapshot (Ljava/util/List;)Ljava/util/List;
 }
 

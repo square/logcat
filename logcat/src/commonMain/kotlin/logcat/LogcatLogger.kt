@@ -4,9 +4,8 @@ import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import logcat.LogcatLogger.Companion.install
 import logcat.LogcatLogger.Companion.uninstall
-import logcat.internal.copyOnWriteArrayList
+import logcat.internal.threadSafeList
 import kotlin.concurrent.Volatile
-import kotlin.jvm.JvmStatic
 
 /**
  * Logger that [logcat] delegates to. Call [install] to enable logging, then add a [LogcatLogger]
@@ -35,14 +34,16 @@ interface LogcatLogger {
 
   companion object {
     /** @see LogcatLogger */
-    @OptIn(InternalLogcatApi::class)
     @JvmStatic
-    val loggers: MutableList<LogcatLogger> = copyOnWriteArrayList()
+    val loggers: MutableList<LogcatLogger> =
+      @OptIn(InternalLogcatApi::class)
+      threadSafeList()
 
     /** @see LogcatObserver */
-    @OptIn(InternalLogcatApi::class)
     @JvmStatic
-    val observers: MutableList<LogcatObserver> = copyOnWriteArrayList()
+    val observers: MutableList<LogcatObserver> =
+      @OptIn(InternalLogcatApi::class)
+      threadSafeList()
 
     @Volatile
     private var installedThrowable: Throwable? = null
@@ -56,11 +57,6 @@ interface LogcatLogger {
     /**
      * Installs the Logcat library, enabling logging. Logs will not actually be evaluated
      * until at least one logger is added to [loggers].
-     *
-     * Pass in an optional [logExecutor] to evaluate log messages on a different thread.
-     *
-     * Libraries should check [isInstalled] before calling this, to avoid overriding any app
-     * set [logExecutor].
      *
      * It is an error to call [install] more than once without calling [uninstall] in between,
      * however doing this won't throw, it'll log an error to the newly provided logger.
@@ -93,6 +89,7 @@ interface LogcatLogger {
         "inline logcat {} calls"
     )
     @PublishedApi
+    @InternalLogcatApi
     internal val logger: LogcatLogger
       get() {
         // New instance per call so that "local" fields aren't retained.
