@@ -61,10 +61,10 @@ inline fun Any.logcat(
   if (!LogcatLogger.isInstalled) {
     return
   }
-  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
   @OptIn(InternalLogcatApi::class)
+  val tagOrCaller = tag ?: outerClassSimpleName()
+  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority, tagOrCaller) }
   if (loggers.isNotEmpty()) {
-    val tagOrCaller = tag ?: outerClassSimpleName()
     val observer = LogcatLogger.observer
     observer?.beforeLog(priority, tagOrCaller)
     val evaluatedMessage = message()
@@ -88,7 +88,7 @@ inline fun logcat(
   if (!LogcatLogger.isInstalled) {
     return
   }
-  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority) }
+  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority, tag) }
   if (loggers.isNotEmpty()) {
     val observer = LogcatLogger.observer
     observer?.beforeLog(priority, tag)

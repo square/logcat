@@ -27,8 +27,10 @@ class AndroidLogcatLogger(minPriority: LogPriority = DEBUG) : LogcatLogger {
 
   private val minPriorityInt: Int = minPriority.priorityInt
 
-  override fun isLoggable(priority: LogPriority): Boolean =
-    priority.priorityInt >= minPriorityInt
+  override fun isLoggable(
+    priority: LogPriority,
+    tag: String
+  ): Boolean = priority.priorityInt >= minPriorityInt
 
   override fun log(
     priority: LogPriority,
@@ -77,7 +79,10 @@ class AndroidLogcatLogger(minPriority: LogPriority = DEBUG) : LogcatLogger {
 
   companion object {
     @JvmStatic
-    fun installOnDebuggableApp(application: Application, minPriority: LogPriority = VERBOSE) {
+    fun installOnDebuggableApp(
+      application: Application,
+      minPriority: LogPriority = VERBOSE
+    ) {
       if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
         LogcatLogger.install()
         LogcatLogger.loggers += AndroidLogcatLogger(minPriority)
