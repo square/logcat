@@ -17,7 +17,7 @@ private const val MAX_TAG_LENGTH = 23
  * at least [minPriorityInt], and is otherwise a no-op.
  *
  * Handles special cases for [LogPriority.ASSERT] (which requires sending to Log.wtf) and
- * splitting logs to be at most 4000 characters per line (otherwise logcat just truncates).
+ * splitting log`s to be at most 4000 characters per line (otherwise logcat just truncates).
  *
  * Call [installOnDebuggableApp] to make sure you never log in release builds.
  *
