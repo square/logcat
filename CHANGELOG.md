@@ -6,6 +6,12 @@ Next version
 
 _20XX-XX-XX_
 
+
+Version 0.4
+-------------
+
+_2025-07-29_
+
 * `isLoggable` now takes a priority and a tag, which allows skipping logging based on tags.
 
 
