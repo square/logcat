@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Next version
+-------------
+
+_20XX-XX-XX_
+
+* `isLoggable` now takes a priority and a tag, which allows skipping logging based on tags.
+
+
 Version 0.3
 -------------
 

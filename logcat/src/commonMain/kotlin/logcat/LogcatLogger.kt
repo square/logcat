@@ -17,11 +17,20 @@ import kotlin.concurrent.Volatile
  */
 interface LogcatLogger {
 
+  @Deprecated(
+    "Override the method that takes priority and tag instead",
+    ReplaceWith("isLoggable(priority, tag)")
+  )
+  fun isLoggable(priority: LogPriority) = true
+
   /**
-   * Whether a log with the provided priority should be logged and the corresponding message
+   * Whether a log with the provided priority and tag should be logged and the corresponding message
    * providing lambda evaluated. Called by [logcat].
    */
-  fun isLoggable(priority: LogPriority) = true
+  fun isLoggable(
+    priority: LogPriority,
+    tag: String
+  ) = isLoggable(priority)
 
   /**
    * Write a log to its destination. Called by [logcat].
@@ -96,11 +105,14 @@ interface LogcatLogger {
 
           private lateinit var localLoggers: List<LogcatLogger>
 
-          override fun isLoggable(priority: LogPriority): Boolean {
+          override fun isLoggable(
+            priority: LogPriority,
+            tag: String
+          ): Boolean {
             if (!isInstalled) {
               return false
             }
-            val filteredLoggers = loggers.filter { it.isLoggable(priority) }
+            val filteredLoggers = loggers.filter { it.isLoggable(priority, tag) }
             localLoggers = filteredLoggers
             return filteredLoggers.isNotEmpty()
           }

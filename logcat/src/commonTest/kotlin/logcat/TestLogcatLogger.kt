@@ -1,7 +1,10 @@
 package logcat
 
 class TestLogcatLogger : LogcatLogger {
-  override fun isLoggable(priority: LogPriority): Boolean {
+  override fun isLoggable(
+    priority: LogPriority,
+    tag: String
+  ): Boolean {
     latestPriority = priority
     return shouldLog
   }
