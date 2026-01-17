@@ -103,6 +103,73 @@ class LogcatTest {
     }
   }
 
+  @Test fun `Any#logcat afterLog is called even when message lambda throws`() {
+    LogcatLogger.install()
+    var afterLogCalled = false
+    LogcatLogger.observer = object : LogcatObserver {
+      override fun beforeLog(priority: LogPriority, tag: String) {}
+      override fun afterLog(priority: LogPriority, tag: String) {
+        afterLogCalled = true
+      }
+    }
+
+    try {
+      logcat { throw RuntimeException("boom") }
+    } catch (e: RuntimeException) {
+      // expected
+    }
+
+    assertThat(afterLogCalled).isTrue()
+  }
+
+  @Test fun `Any#logcat afterLog is called even when logger throws`() {
+    LogcatLogger.install()
+    val throwingLogger = object : LogcatLogger {
+      override fun log(priority: LogPriority, tag: String, message: String) {
+        throw RuntimeException("logger boom")
+      }
+    }
+    loggers += throwingLogger
+    try {
+      var afterLogCalled = false
+      LogcatLogger.observer = object : LogcatObserver {
+        override fun beforeLog(priority: LogPriority, tag: String) {}
+        override fun afterLog(priority: LogPriority, tag: String) {
+          afterLogCalled = true
+        }
+      }
+
+      try {
+        logcat { "Hi" }
+      } catch (e: RuntimeException) {
+        // expected
+      }
+
+      assertThat(afterLogCalled).isTrue()
+    } finally {
+      loggers -= throwingLogger
+    }
+  }
+
+  @Test fun `logcat(tag) afterLog is called even when message lambda throws`() {
+    LogcatLogger.install()
+    var afterLogCalled = false
+    LogcatLogger.observer = object : LogcatObserver {
+      override fun beforeLog(priority: LogPriority, tag: String) {}
+      override fun afterLog(priority: LogPriority, tag: String) {
+        afterLogCalled = true
+      }
+    }
+
+    try {
+      logcat("Tag") { throw RuntimeException("boom") }
+    } catch (e: RuntimeException) {
+      // expected
+    }
+
+    assertThat(afterLogCalled).isTrue()
+  }
+
   @Test fun `logcat() captures outer this tag from lambda`() {
     LogcatLogger.install()
 
