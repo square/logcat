@@ -134,12 +134,32 @@ internal fun sendToLoggers(
 ) {
   val observer = LogcatLogger.observer
   observer?.beforeLog(priority, tag)
-  firstLogger.log(priority, tag, message)
-  while (remainingLoggers.hasNext()) {
-    val logger = remainingLoggers.next()
-    if (logger.isLoggable(priority, tag)) {
-      logger.log(priority, tag, message)
+
+  // We want to ensure that beforeLog is paired with afterLog, even if
+  // something within the body of the try throws. A simple try/finally has a
+  // problem: If the code within finally (i.e. afterLog) throws, then it will
+  // hide the original exception. To address this, we hold onto the original
+  // exception and rethrow it.
+  //
+  // This could also be accomplished with a [java.io.Closeable.use], at the
+  // cost of an extra allocation.
+  var thrown: Throwable? = null
+  try {
+    firstLogger.log(priority, tag, message)
+    while (remainingLoggers.hasNext()) {
+      val logger = remainingLoggers.next()
+      if (logger.isLoggable(priority, tag)) {
+        logger.log(priority, tag, message)
+      }
+    }
+  } catch (e: Throwable) {
+    thrown = e
+    throw e
+  } finally {
+    try {
+      observer?.afterLog(priority, tag)
+    } catch (afterLogException: Throwable) {
+      thrown?.addSuppressed(afterLogException) ?: throw afterLogException
     }
   }
-  observer?.afterLog(priority, tag)
 }
