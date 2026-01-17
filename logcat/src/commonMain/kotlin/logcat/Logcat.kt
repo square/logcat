@@ -67,11 +67,17 @@ inline fun Any.logcat(
   if (loggers.isNotEmpty()) {
     val observer = LogcatLogger.observer
     observer?.beforeLog(priority, tagOrCaller)
-    val evaluatedMessage = message()
-    for (logger in loggers) {
-      logger.log(priority, tagOrCaller, evaluatedMessage)
+    try {
+      val evaluatedMessage = message()
+      for (logger in loggers) {
+        logger.log(priority, tagOrCaller, evaluatedMessage)
+      }
+    } finally {
+      // If both the body of the try block and afterLog throw, the former
+      // exception will be lost. We accept this behavior because this is an
+      // inline function and we want to keep it small.
+      observer?.afterLog(priority, tagOrCaller)
     }
-    observer?.afterLog(priority, tagOrCaller)
   }
 }
 
@@ -92,10 +98,16 @@ inline fun logcat(
   if (loggers.isNotEmpty()) {
     val observer = LogcatLogger.observer
     observer?.beforeLog(priority, tag)
-    val evaluatedMessage = message()
-    for (logger in loggers) {
-      logger.log(priority, tag, evaluatedMessage)
+    try {
+      val evaluatedMessage = message()
+      for (logger in loggers) {
+        logger.log(priority, tag, evaluatedMessage)
+      }
+    } finally {
+      // If both the body of the try block and afterLog throw, the former
+      // exception will be lost. We accept this behavior because this is an
+      // inline function and we want to keep it small.
+      observer?.afterLog(priority, tag)
     }
-    observer?.afterLog(priority, tag)
   }
 }
