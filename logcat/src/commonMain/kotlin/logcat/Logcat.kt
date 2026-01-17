@@ -63,16 +63,16 @@ inline fun Any.logcat(
   }
   @OptIn(InternalLogcatApi::class)
   val tagOrCaller = tag ?: outerClassSimpleName()
-  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority, tagOrCaller) }
-  if (loggers.isNotEmpty()) {
-    val observer = LogcatLogger.observer
-    observer?.beforeLog(priority, tagOrCaller)
-    val evaluatedMessage = message()
-    for (logger in loggers) {
-      logger.log(priority, tagOrCaller, evaluatedMessage)
-    }
-    observer?.afterLog(priority, tagOrCaller)
-  }
+  val iterator = LogcatLogger.loggers.iterator()
+
+  // Determine if there is anything to log
+  val firstLogger = findFirstLogger(tagOrCaller, priority, iterator) ?: return
+
+  // Evaluate the message to log
+  val evaluatedMessage = message()
+
+  // Do the logging
+  sendToLoggers(tagOrCaller, priority, evaluatedMessage, firstLogger, iterator)
 }
 
 /**
@@ -86,4 +86,60 @@ inline fun logcat(
   message: () -> String
 ) {
   Unit.logcat(priority, tag, message)
+}
+
+/**
+ * This function is pulled out of logcat to save on code size. logcat is
+ * inlined, but this one is not. This function is designed to answer the
+ * question "do we need to call message()?"
+ *
+ * @param iterator All the LogcatLoggers
+ * @return The first LogcatLogger for which isLoggable(priority, tag) returned
+ * true, or null if there are none.
+ */
+@PublishedApi
+@JvmName("internalDoNotCall_findFirstLogger")
+internal fun findFirstLogger(
+  tag: String,
+  priority: LogPriority,
+  iterator: Iterator<LogcatLogger>
+): LogcatLogger? {
+  while (iterator.hasNext()) {
+    val logger = iterator.next()
+    if (logger.isLoggable(priority, tag)) {
+      return logger
+    }
+  }
+  return null
+}
+
+/**
+ * This function is pulled out of logcat to save on code size. logcat is
+ * inlined, but this one is not. This function takes a concrete message as
+ * input because passing the lambda to a non-inlined function would require
+ * allocating an object for it.
+ *
+ * @param firstLogger The firstLogger for which isLoggable(priority, tag)
+ * returned true
+ * @param iterator All the LogcatLoggers after firstLogger
+ */
+@PublishedApi
+@JvmName("internalDoNotCall_sendToLoggers")
+internal fun sendToLoggers(
+  tag: String,
+  priority: LogPriority,
+  message: String,
+  firstLogger: LogcatLogger,
+  remainingLoggers: Iterator<LogcatLogger>
+) {
+  val observer = LogcatLogger.observer
+  observer?.beforeLog(priority, tag)
+  firstLogger.log(priority, tag, message)
+  while (remainingLoggers.hasNext()) {
+    val logger = remainingLoggers.next()
+    if (logger.isLoggable(priority, tag)) {
+      logger.log(priority, tag, message)
+    }
+  }
+  observer?.afterLog(priority, tag)
 }
