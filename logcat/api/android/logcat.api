@@ -31,6 +31,8 @@ public final class logcat/LogPriority : java/lang/Enum {
 }
 
 public final class logcat/Logcat {
+	public static final fun internalDoNotCall_findFirstLogger (Ljava/lang/String;Llogcat/LogPriority;Ljava/util/Iterator;)Llogcat/LogcatLogger;
+	public static final fun internalDoNotCall_sendToLoggers (Ljava/lang/String;Llogcat/LogPriority;Ljava/lang/String;Llogcat/LogcatLogger;Ljava/util/Iterator;)V
 	public static final fun logcat (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 	public static final fun logcat (Ljava/lang/String;Llogcat/LogPriority;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun logcat$default (Ljava/lang/Object;Llogcat/LogPriority;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
