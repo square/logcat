@@ -16,6 +16,7 @@ class TestLogcatLogger : LogcatLogger {
   )
 
   var latestLog: Log? = null
+  val allLogs = mutableListOf<Log>()
   var latestPriority: LogPriority? = null
   var shouldLog = true
 
@@ -24,6 +25,8 @@ class TestLogcatLogger : LogcatLogger {
     tag: String,
     message: String
   ) {
-    latestLog = Log(priority, tag, message)
+    val log = Log(priority, tag, message)
+    latestLog = log
+    allLogs += log
   }
 }

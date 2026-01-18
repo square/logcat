@@ -149,6 +149,52 @@ class LogcatTest {
     assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
   }
 
+  @Test fun `multiple loggers all receive the message`() {
+    LogcatLogger.install()
+    val logger2 = TestLogcatLogger().apply { loggers += this }
+    val logger3 = TestLogcatLogger().apply { loggers += this }
+
+    logcat { "Hi" }
+
+    assertThat(logger.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+    assertThat(logger2.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+    assertThat(logger3.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+
+    loggers -= logger2
+    loggers -= logger3
+  }
+
+  @Test fun `when first logger is not loggable, later loggers still receive message`() {
+    LogcatLogger.install()
+    logger.shouldLog = false
+    val logger2 = TestLogcatLogger().apply { loggers += this }
+
+    logcat { "Hi" }
+
+    assertThat(logger.allLogs).isEmpty()
+    assertThat(logger2.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+
+    loggers -= logger2
+  }
+
+  @Test fun `only loggable loggers receive the message`() {
+    LogcatLogger.install()
+    val logger2 = TestLogcatLogger().apply {
+      shouldLog = false
+      loggers += this
+    }
+    val logger3 = TestLogcatLogger().apply { loggers += this }
+
+    logcat { "Hi" }
+
+    assertThat(logger.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+    assertThat(logger2.allLogs).isEmpty()
+    assertThat(logger3.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+
+    loggers -= logger2
+    loggers -= logger3
+  }
+
   companion object {
     fun companionFunctionLog(
       message: () -> String
