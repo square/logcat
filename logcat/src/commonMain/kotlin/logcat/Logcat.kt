@@ -85,17 +85,5 @@ inline fun logcat(
   priority: LogPriority = DEBUG,
   message: () -> String
 ) {
-  if (!LogcatLogger.isInstalled) {
-    return
-  }
-  val loggers = LogcatLogger.loggers.filter { it.isLoggable(priority, tag) }
-  if (loggers.isNotEmpty()) {
-    val observer = LogcatLogger.observer
-    observer?.beforeLog(priority, tag)
-    val evaluatedMessage = message()
-    for (logger in loggers) {
-      logger.log(priority, tag, evaluatedMessage)
-    }
-    observer?.afterLog(priority, tag)
-  }
+  Unit.logcat(priority, tag, message)
 }
