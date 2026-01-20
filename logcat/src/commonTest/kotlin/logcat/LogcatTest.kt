@@ -105,6 +105,78 @@ class LogcatTest {
     }
   }
 
+  @Test fun `afterLog is called even when later logger throws`() {
+    LogcatLogger.install()
+    val loggerException = RuntimeException("logger boom")
+    val throwingLogger = object : LogcatLogger {
+      override fun log(priority: LogPriority, tag: String, message: String) {
+        throw loggerException
+      }
+    }
+    loggers += throwingLogger
+    var afterLogCalled = false
+    LogcatLogger.observer = object : LogcatObserver {
+      override fun beforeLog(priority: LogPriority, tag: String) {}
+      override fun afterLog(priority: LogPriority, tag: String) {
+        afterLogCalled = true
+      }
+    }
+
+    val thrown = runCatching { logcat { "Hi" } }.exceptionOrNull()
+
+    assertThat(logger.latestLog!!.message).isEqualTo("Hi")
+    assertThat(afterLogCalled).isTrue()
+    assertThat(thrown).isSameAs(loggerException)
+  }
+
+  @Test fun `afterLog is called even when first logger throws`() {
+    LogcatLogger.install()
+    loggers.clear()
+    val loggerException = RuntimeException("first logger boom")
+    val throwingLogger = object : LogcatLogger {
+      override fun log(priority: LogPriority, tag: String, message: String) {
+        throw loggerException
+      }
+    }
+    loggers += throwingLogger
+    var afterLogCalled = false
+    observer = object : LogcatObserver {
+      override fun beforeLog(priority: LogPriority, tag: String) {}
+      override fun afterLog(priority: LogPriority, tag: String) {
+        afterLogCalled = true
+      }
+    }
+
+    val thrown = runCatching { logcat { "Hi" } }.exceptionOrNull()
+
+    assertThat(afterLogCalled).isTrue()
+    assertThat(thrown).isSameAs(loggerException)
+  }
+
+  @Test fun `logger exception propagates when both logger and afterLog throw`() {
+    LogcatLogger.install()
+    loggers.clear()
+    val loggerException = RuntimeException("logger boom")
+    val afterLogException = RuntimeException("afterLog boom")
+    val throwingLogger = object : LogcatLogger {
+      override fun log(priority: LogPriority, tag: String, message: String) {
+        throw loggerException
+      }
+    }
+    loggers += throwingLogger
+    observer = object : LogcatObserver {
+      override fun beforeLog(priority: LogPriority, tag: String) {}
+      override fun afterLog(priority: LogPriority, tag: String) {
+        throw afterLogException
+      }
+    }
+
+    val thrown = runCatching { logcat { "Hi" } }.exceptionOrNull()
+
+    assertThat(thrown).isSameAs(loggerException)
+    assertThat(thrown!!.suppressedExceptions).containsExactly(afterLogException)
+  }
+
   @Test fun `logcat() captures outer this tag from lambda`() {
     LogcatLogger.install()
 
