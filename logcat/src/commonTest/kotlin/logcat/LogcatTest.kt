@@ -3,6 +3,7 @@ package logcat
 import com.varabyte.truthish.assertThat
 import logcat.LogPriority.INFO
 import logcat.LogcatLogger.Companion.loggers
+import logcat.LogcatLogger.Companion.observer
 import kotlin.test.AfterTest
 import kotlin.test.Test
 
@@ -15,7 +16,8 @@ class LogcatTest {
   @AfterTest
   fun tearDown() {
     LogcatLogger.uninstall()
-    loggers -= logger
+    loggers.clear()
+    observer = null
   }
 
   @Test fun `when no logger set, calling logcat() does not crash`() {
@@ -147,6 +149,92 @@ class LogcatTest {
     companionFunctionLog { "Hi" }
 
     assertThat(logger.latestLog!!.tag).isEqualTo(LogcatTest::class.java.simpleName)
+  }
+
+  @Test fun `multiple loggers all receive the message`() {
+    LogcatLogger.install()
+    val logger2 = TestLogcatLogger().apply { loggers += this }
+    val logger3 = TestLogcatLogger().apply { loggers += this }
+
+    logcat { "Hi" }
+
+    assertThat(logger.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+    assertThat(logger2.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+    assertThat(logger3.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+  }
+
+  @Test fun `when first logger is not loggable, later loggers still receive message`() {
+    LogcatLogger.install()
+    logger.shouldLog = false
+    val logger2 = TestLogcatLogger().apply { loggers += this }
+
+    logcat { "Hi" }
+
+    assertThat(logger.allLogs).isEmpty()
+    assertThat(logger2.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+  }
+
+  @Test fun `only loggable loggers receive the message`() {
+    LogcatLogger.install()
+    val logger2 = TestLogcatLogger().apply {
+      shouldLog = false
+      loggers += this
+    }
+    val logger3 = TestLogcatLogger().apply { loggers += this }
+
+    logcat { "Hi" }
+
+    assertThat(logger.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+    assertThat(logger2.allLogs).isEmpty()
+    assertThat(logger3.allLogs.map { it.message }).isEqualTo(listOf("Hi"))
+  }
+
+  @Test fun `message lambda is evaluated exactly once with multiple loggers`() {
+    LogcatLogger.install()
+    val logger2 = TestLogcatLogger().apply { loggers += this }
+    val logger3 = TestLogcatLogger().apply { loggers += this }
+    var evaluationCount = 0
+
+    logcat { "Hi${++evaluationCount}" }
+
+    assertThat(evaluationCount).isEqualTo(1)
+    assertThat(logger.latestLog!!.message).isEqualTo("Hi1")
+    assertThat(logger2.latestLog!!.message).isEqualTo("Hi1")
+    assertThat(logger3.latestLog!!.message).isEqualTo("Hi1")
+  }
+
+  @Test fun `observer beforeLog and afterLog called exactly once with multiple loggers`() {
+    LogcatLogger.install()
+    val logger2 = TestLogcatLogger().apply { loggers += this }
+    var beforeCount = 0
+    var afterCount = 0
+    observer = object : LogcatObserver {
+      override fun beforeLog(priority: LogPriority, tag: String) {
+        beforeCount++
+      }
+      override fun afterLog(priority: LogPriority, tag: String) {
+        afterCount++
+      }
+    }
+
+    logcat { "Hi" }
+
+    assertThat(beforeCount).isEqualTo(1)
+    assertThat(afterCount).isEqualTo(1)
+  }
+
+  @Test fun `when all loggers not loggable, the message lambda is not invoked`() {
+    LogcatLogger.install()
+    logger.shouldLog = false
+    val logger2 = TestLogcatLogger().apply {
+      shouldLog = false
+      loggers += this
+    }
+    var count = 0
+
+    logcat { "Hi${++count}" }
+
+    assertThat(count).isEqualTo(0)
   }
 
   companion object {
